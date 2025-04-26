@@ -15,7 +15,6 @@ type
   /// </summary>
   TArquivoCSVLinha = class
   private
-    FIdLinha: Integer;
     FCodigoNCM: Integer;
     FEx: Integer;
     FTipo: Integer;
@@ -38,11 +37,6 @@ type
     /// Destrói a instância da classe TArquivoCSVLinha.
     /// </summary>
     destructor Destroy; override;
-
-    /// <summary>
-    /// Obtém e define o id produto.
-    /// </summary>
-    property ID: Integer read FIdLinha write FIdLinha;
 
     /// <summary>
     /// Obtém e define o código do produto.
@@ -112,7 +106,6 @@ uses uConstantesGerais;
 
 constructor TArquivoCSVLinha.Create;
 begin
-  FIdLinha := INT_ZERO;
   FCodigoNCM := INT_ZERO;
   FEx := INT_ZERO;
   FTipo := INT_ZERO;
@@ -136,33 +129,31 @@ end;
 procedure TArquivoCSVLinha.AtribuirValores(const pValores: TArray<string>);
 begin
   if Length(pValores) >= INT_1 then
-    FIdLinha := StrToIntDef(pValores[INT_ZERO], INT_ZERO);
+    FCodigoNCM := StrToIntDef(pValores[INT_ZERO], INT_ZERO);
   if Length(pValores) >= INT_2 then
-    FCodigoNCM := StrToIntDef(pValores[INT_1], INT_ZERO);
+    FEx := StrToIntDef(pValores[INT_1], INT_ZERO);
   if Length(pValores) >= INT_3 then
-    FEx := StrToIntDef(pValores[INT_2], INT_ZERO);
+    FTipo := StrToIntDef(pValores[INT_2], INT_ZERO);
   if Length(pValores) >= INT_4 then
-    FTipo := StrToIntDef(pValores[INT_3], INT_ZERO);
+    FDescricao := pValores[INT_3];
   if Length(pValores) >= INT_5 then
-    FDescricao := pValores[INT_4];
+    FNacionalFederal := StrToCurrDef(pValores[INT_4], CURRENCY_ZERO);
   if Length(pValores) >= INT_6 then
-    FNacionalFederal := StrToCurrDef(pValores[INT_5], CURRENCY_ZERO);
+    FImportadosFederal := StrToCurrDef(pValores[INT_5], CURRENCY_ZERO);
   if Length(pValores) >= INT_7 then
-    FImportadosFederal := StrToCurrDef(pValores[INT_6], CURRENCY_ZERO);
+    FEstadual := StrToCurrDef(pValores[INT_6], CURRENCY_ZERO);
   if Length(pValores) >= INT_8 then
-    FEstadual := StrToCurrDef(pValores[INT_7], CURRENCY_ZERO);
+    FMunicipal := StrToCurrDef(pValores[INT_7], CURRENCY_ZERO);
   if Length(pValores) >= INT_9 then
-    FMunicipal := StrToCurrDef(pValores[INT_8], CURRENCY_ZERO);
+    FVigenciaInicio :=  StrToDateDef(pValores[INT_8], DATETIME_VAZIO);
   if Length(pValores) >= INT_10 then
-    FVigenciaInicio :=  StrToDateDef(pValores[9], DATETIME_VAZIO);
+    FVigenciaFim := StrToDateDef(pValores[INT_9], DATETIME_VAZIO);
   if Length(pValores) >= INT_11 then
-    FVigenciaFim := StrToDateDef(pValores[10], DATETIME_VAZIO);
+    FChave := pValores[INT_10];
   if Length(pValores) >= INT_12 then
-    FChave := pValores[INT_11];
+    FVersao := pValores[INT_11];
   if Length(pValores) >= INT_13 then
-    FVersao := pValores[INT_12];
-  if Length(pValores) >= INT_14 then
-    FFonte := pValores[INT_13];
+    FFonte := pValores[INT_12];
 end;
 
 end.

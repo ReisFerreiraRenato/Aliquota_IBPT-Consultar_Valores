@@ -6,15 +6,33 @@ unit uConstantesGerais;
 
 interface
 
+type
+  /// <summary>
+  /// Define um tipo para um array de strings contendo as siglas dos estados brasileiros.
+  /// </summary>
+  TTipoSiglasEstados = array[0..26] of string;
+
 const
   ARQUIVO_CONFIGURACAO_NAO_ENCONTRADO = 'Arquivo de configuração não encontrado: ';
+  ARQUIVO_NAO_ENCONTRADO = 'Arquivo não encontrado: ';
 
   BANCO_DADOS_VALIDOS: array[0..3] of string = ('Firebird', 'Oracle', 'SQLServer', 'MySQL');
 
   CURRENCY_VAZIO = - 99999.99;
   CURRENCY_ZERO = 0.0;
 
+  DATA_YYYY_MM_DD = 'YYYY-MM-DD HH:MM:SS';
   DATETIME_VAZIO = 0;
+  DECIMAL_DOIS_DIGITOS = '0.00';
+  DIRETORIO_TABELAS_IBPT = 'TabelasIBPT';
+
+  ERRO_AO_BUSCAR_PLANILHA = 'Erro ao buscar planilha: ';
+  ERRO_AO_BUSCAR_DIRETORIO = 'Diretório não encontrado. Dir: ';
+  ERRO_ESCREVER_ARQUIVO = 'Erro ao escrever arquivo: ';
+  ERRO_LER_ARQUIVO = 'Erro ao ler arquivo: ';
+  EXTENSAO_CSV = '.csv';
+  EXTENSAO_XLS = '.xls';
+  EXTENSAO_XLSX = '.xlsx';
 
   INT_VAZIO = -999999;
   INT_ZERO = 0;
@@ -33,8 +51,20 @@ const
   INT_13 = 13;
   INT_14 = 14;
   INT_15 = 15;
+  INT_20 = 20;
+  INT_100 = 100;
+  INT_255 = 255;
 
+  /// <summary>
+  /// Constante que armazena as siglas de todos os estados brasileiros e do Distrito Federal.
+  /// </summary>
+  SIGLA_ESTADOS: TTipoSiglasEstados =
+    ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
+     'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
+     'SP', 'SE', 'TO');
+  SIGLA_IBPTAX = 'IBPTax';
   STRING_VAZIO = '';
+  STRING_DEBUG = 'Win32\Debug\';
 
 implementation
 
