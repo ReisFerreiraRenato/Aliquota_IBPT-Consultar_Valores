@@ -20,12 +20,14 @@ type
     /// <param name="pCodigo">O código do produto.</param>
     /// <returns>O produto encontrado ou nil se não encontrado.</returns>
     function BuscarPorCodigo(pCodigo: Integer): TProduto;
+
     /// <summary>
     /// Busca produtos pela descrição.
     /// </summary>
     /// <param name="pDescricao">A descrição do produto.</param>
     /// <returns>Uma lista de produtos que correspondem à descrição.</returns>
     function BuscarPorDescricao(pDescricao: string): TArray<TProduto>;
+
     /// <summary>
     /// Busca produtos pelo NCM.
     /// </summary>

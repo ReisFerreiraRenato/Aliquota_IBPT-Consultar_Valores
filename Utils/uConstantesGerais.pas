@@ -65,6 +65,9 @@ const
   SIGLA_IBPTAX = 'IBPTax';
   STRING_VAZIO = '';
   STRING_DEBUG = 'Win32\Debug\';
+  PASTA_TEST = '\Test';
+
+  ARQUIVO_PASTA_CONF_INI = 'Config\config.ini';
 
 implementation
 

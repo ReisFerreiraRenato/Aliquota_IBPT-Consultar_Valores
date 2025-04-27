@@ -8,7 +8,9 @@ interface
 
 uses
   System.SysUtils,
-  uConstantesGerais;
+  uConstantesGerais,
+  uConstantesBaseDados,
+  uLogErro;
 
   // <summary>
   /// Funcao para adicionar % antes e depois da string
@@ -39,6 +41,11 @@ uses
   /// result Integer
   /// </summary>
   function StringParaInt(const pValor: string): Integer;
+
+  /// <summary>
+  /// Método para tratar erro de parâmetro vazio na configuração da conexao
+  /// </summary>
+  procedure TratarErroConexaoParametro(const pParametroVazio: String);
 
 implementation
 
@@ -79,6 +86,11 @@ end;
 function ConcatenaBuscaLiteralString(pValor: string): string;
 begin
   Result := '%' + pValor + '%';
+end;
+
+procedure TratarErroConexaoParametro(const pParametroVazio: String);
+begin
+  RegistrarErro(ERRO_PARAMETRO_VAZIO + pParametroVazio);
 end;
 
 end.

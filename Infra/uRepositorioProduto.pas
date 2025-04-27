@@ -13,7 +13,8 @@ uses
   FireDAC.Stan.Param,
   Data.DB,
   uConstantesGerais,
-  uFuncoes;
+  uFuncoes,
+  uVariaveisGlobais;
 
 type
   /// <summary>
@@ -22,26 +23,32 @@ type
   TRepositorioProduto = class(TInterfacedObject, IRepositorioProduto)
   private
     FConexaoBanco: TConexaoBanco;
+
     /// <summary>
     /// Obtém o produto do leitor de dados.
     /// </summary>
     /// <param name="pFDQuery">Objeto TFDQuery com os dados do produto.</param>
     /// <returns>Retorna o produto.</returns>
     function ObterProdutoDoLeitor(pFDQuery: TFDQuery): TProduto;
+
   public
     /// <summary>
     /// Cria uma nova instância da classe TRepositorioProdutoFirebird.
     /// </summary>
     /// <param name="pConexaoBanco">A conexão com o banco de dados Firebird.</param>
     constructor Create(pConexaoBanco: TConexaoBanco);
+
     /// <summary>
     /// Destrói a instância da classe TRepositorioProdutoFirebird.
     /// </summary>
     destructor Destroy; override;
+
     /// <inheritdoc />
     function BuscarPorCodigo(pCodigo: Integer): TProduto;
+
     /// <inheritdoc />
     function BuscarPorDescricao(pDescricao: string): TArray<TProduto>;
+
     /// <inheritdoc />
     function BuscarPorNcm(pNcm: string): TArray<TProduto>;
   end;
@@ -95,8 +102,8 @@ end;
 function TRepositorioProduto.BuscarPorDescricao(
   pDescricao: string): TArray<TProduto>;
 const
-  CONDICAO_BUSCA_PRODUTO_DESCRICAO = ' WHERE DESCRICAO LIKE :DESCRICAO';
-  P_DESCRICAO = '';
+  CONDICAO_BUSCA_PRODUTO_DESCRICAO = ' WHERE UPPER(DESCRICAO) LIKE :DESCRICAO';
+  P_DESCRICAO = 'DESCRICAO';
 var
   FDQuery: TFDQuery;
   ListaProdutos: TList<TProduto>;
@@ -108,7 +115,8 @@ begin
   try
     FDQuery.Connection := FConexaoBanco.Conexao;
     FDQuery.SQL.Text := SQL_PADRAO_PRODUTO + CONDICAO_BUSCA_PRODUTO_DESCRICAO;
-    FDQuery.Params.ParamByName(P_DESCRICAO).AsString := ConcatenaBuscaLiteralString(pDescricao);
+    FDQuery.Params.ParamByName(P_DESCRICAO).AsString :=
+        UpperCase(ConcatenaBuscaLiteralString(pDescricao));
     FDQuery.Open;
     while not FDQuery.Eof do
     begin
