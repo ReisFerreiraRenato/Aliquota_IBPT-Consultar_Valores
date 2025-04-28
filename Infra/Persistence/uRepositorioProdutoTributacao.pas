@@ -53,7 +53,8 @@ type
     /// </summary>
     /// <param name="pCodigoProduto">Código do produto para buscar a tributação.</param>
     /// <returns>Objeto com os dados da tributação do produto, ou nil se não encontrado.</returns>
-    function ObterProdutoTributacao(const pCodigoProduto: Integer): TProdutoTributacao; overload;
+    function ObterProdutoTributacao
+      (const pCodigoProduto: Integer): TProdutoTributacao; overload;
 
     /// <summary>
     /// Obtém o registro de tributação de produto mais recente por código do produto, NCM e UF.
@@ -63,7 +64,8 @@ type
     /// <param name="pNcm">NCM do produto.</param>
     /// <param name="pUf">UF do produto.</param>
     /// <returns>Objeto com os dados da tributação do produto mais recente, ou nil se não encontrado.</returns>
-    function ObterProdutoTributacao(const pCodigoProduto: Integer; const pUf: string): TProdutoTributacao; overload;
+    function ObterProdutoTributacao
+      (const pCodigoProduto: Integer; const pUf: string): TProdutoTributacao; overload;
 
     /// <summary>
     /// Atualiza um registro de tributação de produto no banco de dados.
@@ -261,7 +263,8 @@ begin
   end;
 end;
 
-function TRepositorioProdutoTributacao.ObterProdutoTributacao(const pCodigoProduto: Integer; const pUf: string): TProdutoTributacao;
+function TRepositorioProdutoTributacao.ObterProdutoTributacao
+  (const pCodigoProduto: Integer; const pUf: string): TProdutoTributacao;
 const
   SQL_AND_UF = 'AND UF = :UF ';
   SQL_ORDER_BY_VIGENCIA_FIM_DESC = 'ORDER BY VIGENCIAFIM DESC';

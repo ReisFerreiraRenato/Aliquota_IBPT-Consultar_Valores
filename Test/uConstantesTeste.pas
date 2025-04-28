@@ -20,6 +20,7 @@ const
   DESCRICAO_PRODUTO_INEXISTENTE = 'Produto Inexistente';
 
   EXCLUIR_PRODUTO_NAO_EXISTENTE_NAO_CAUSOU_ERRO = 'Excluir produto não existente não causou erro ';
+  ERRO_AO_BUSCAR_PLANILHA = 'Erro ao buscar Palnilha';
 
   FONTE_TESTE = 'FonteTeste';
 

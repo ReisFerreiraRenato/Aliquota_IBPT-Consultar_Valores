@@ -1,0 +1,197 @@
+unit uImportadorTabelas;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Types,
+  System.IOUtils,
+  System.Classes,
+  System.Generics.Collections,
+  uArquivoCSV,
+  uRepositorioProduto,
+  uRepositorioProdutoTributacao,
+  uConexaoBanco,
+  uProduto,
+  uProdutoTributacao,
+  uLogErro,
+  FireDAC.Comp.Client,
+  uConstantesGerais,
+  uConstantesBaseDados;
+
+type
+  TImportadorTabelas = class(TObject)
+  private
+    FRepositorioProduto: TRepositorioProduto;
+    FRepositorioProdutoTributacao: TRepositorioProdutoTributacao;
+    FConexaoBanco: TConexaoBanco;
+    FArquivosCSV: TList<TArquivoCSV>;
+
+    /// <summary>
+    /// Importa os dados de tributação de produtos a partir de arquivos CSV.
+    /// Este método agora busca e importa todos os arquivos CSV dos estados.
+    /// </summary>
+    procedure ImportarTodasTabelas;
+  public
+    /// <summary>
+    /// Cria uma nova instância do importador de tabelas.
+    /// </summary>
+    constructor Create;
+
+    /// <summary>
+    /// Destrói a instância do importador de tabelas.
+    /// </summary>
+    destructor Destroy; override;
+
+    function ImportarTabelas: Boolean; overload;
+  end;
+
+implementation
+
+constructor TImportadorTabelas.Create;
+begin
+  // Cria a conexão com o banco de dados.
+  FConexaoBanco := TConexaoBanco.Create;
+  FConexaoBanco.AbrirConexao;
+
+  // Cria os repositórios para acessar os dados.
+  FRepositorioProduto := TRepositorioProduto.Create(FConexaoBanco);
+  FRepositorioProdutoTributacao := TRepositorioProdutoTributacao.Create(FConexaoBanco.Conexao);
+  FArquivosCSV := TList<TArquivoCSV>.Create; // Inicializa a lista de arquivos CSV.
+end;
+
+destructor TImportadorTabelas.Destroy;
+begin
+  // Libera os recursos.
+  FRepositorioProduto.Free;
+  FRepositorioProdutoTributacao.Free;
+  FConexaoBanco.FecharConexao;
+  FConexaoBanco.Free;
+  for var ArquivoCSV in FArquivosCSV do // Libera cada arquivo CSV na lista.
+    ArquivoCSV.Free;
+  FArquivosCSV.Free; // Libera a lista em si.
+  inherited;
+end;
+
+function TImportadorTabelas.ImportarTabelas: Boolean;
+begin
+  Result := false;
+  try
+    ImportarTodasTabelas;
+    result := True;
+  except on E: Exception do
+    begin
+      RegistrarErro('');
+    end;
+  end;
+end;
+
+procedure TImportadorTabelas.ImportarTodasTabelas;
+var
+  Produto: TProduto;
+  ProdutoTributacao: TProdutoTributacao;
+  CodigoProduto: Integer;
+  UF: string;
+  ncm: string;
+  ArquivoCSV: TArquivoCSV;
+  SiglaEstado: string;
+begin
+  // Itera sobre as siglas dos estados para buscar os arquivos CSV.
+  for SiglaEstado in SIGLA_ESTADOS do
+  begin
+    try
+      // Busca o arquivo CSV para o estado atual.
+      ArquivoCSV := TArquivoCSV.Create(SiglaEstado);
+      FArquivosCSV.Add(ArquivoCSV);
+    except
+      on E: Exception do
+      begin
+        // Registra o erro e continua com o próximo estado.
+        RegistrarErro(ERRO_AO_BUSCAR_PLANILHA + E.Message);
+        Continue;
+      end;
+    end;
+  end;
+
+  // Agora, itera sobre os arquivos CSV encontrados e processa os dados.
+  for ArquivoCSV in FArquivosCSV do
+  begin
+    ArquivoCSV.LerArquivo(); // Lê o arquivo CSV
+
+    // Itera sobre os registros do arquivo CSV.
+    ArquivoCSV.Dados.First;
+    while not ArquivoCSV.Dados.Eof do
+    begin
+      // Obtém os valores dos campos da linha atual.
+      UF := ArquivoCSV.Dados.FieldByName(cUF).AsString;
+      CodigoProduto := ArquivoCSV.Dados.FieldByName(cCodigo).AsInteger;
+      ncm := ArquivoCSV.Dados.FieldByName(cNCM).AsString;
+
+      // Busca o produto pelo código.
+      Produto := FRepositorioProduto.BuscarPorCodigo(CodigoProduto);
+
+      // Verifica se o produto existe.
+      if not Assigned(Produto) then
+      begin
+        // Produto não existe, cria um novo produto.
+        Produto := TProduto.Create(
+          CodigoProduto,
+          ArquivoCSV.Dados.FieldByName(cDESCRICAO).AsString,
+          ncm); // Supondo que a chave do CSV é o NCM
+        FRepositorioProduto.Inserir(Produto);
+        Produto.Free;
+      end;
+
+      // Busca a tributação do produto pelo código e UF.
+      ProdutoTributacao := FRepositorioProdutoTributacao.ObterProdutoTributacao(CodigoProduto, UF);
+
+      // Cria ou atualiza a tributação do produto.
+      if Assigned(ProdutoTributacao) then
+      begin
+        // ProdutoTributacao existe, atualiza os dados.
+        ProdutoTributacao.EX := ArquivoCSV.Dados.FieldByName(cEX).AsInteger;
+        ProdutoTributacao.TIPO := ArquivoCSV.Dados.FieldByName(cTIPO).AsInteger;
+        ProdutoTributacao.TRIBNACIONALFEDERAL := ArquivoCSV.Dados.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency;
+        ProdutoTributacao.TRIBIMPORTADOSFEDERAL := ArquivoCSV.Dados.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency;
+        ProdutoTributacao.TRIBESTADUAL := ArquivoCSV.Dados.FieldByName(cTRIBESTADUAL).AsCurrency;
+        ProdutoTributacao.TRIBMUNICIPAL := ArquivoCSV.Dados.FieldByName(cTRIBMUNICIPAL).AsCurrency;
+        ProdutoTributacao.VIGENCIAINICIO := ArquivoCSV.Dados.FieldByName(cVIGENCIAINICIO).AsDateTime;
+        ProdutoTributacao.VIGENCIAFIM := ArquivoCSV.Dados.FieldByName(cVIGENCIAFIM).AsDateTime;
+        ProdutoTributacao.CHAVE := ArquivoCSV.Dados.FieldByName(cCHAVE).AsString;
+        ProdutoTributacao.VERSAO := ArquivoCSV.Dados.FieldByName(cVERSAO).AsString;
+        ProdutoTributacao.FONTE := ArquivoCSV.Dados.FieldByName(cFONTE).AsString;
+        FRepositorioProdutoTributacao.AtualizarProdutoTributacao(ProdutoTributacao);
+        ProdutoTributacao.Free;
+      end
+      else
+      begin
+        // ProdutoTributacao não existe, cria um novo registro.
+        try
+          ProdutoTributacao := TProdutoTributacao.Create;
+          ProdutoTributacao.CODIGOPRODUTO := CodigoProduto;
+          ProdutoTributacao.UF := UF;
+          ProdutoTributacao.EX := ArquivoCSV.Dados.FieldByName(cEX).AsInteger;
+          ProdutoTributacao.TIPO := ArquivoCSV.Dados.FieldByName(cTIPO).AsInteger;
+          ProdutoTributacao.TRIBNACIONALFEDERAL := ArquivoCSV.Dados.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency;
+          ProdutoTributacao.TRIBIMPORTADOSFEDERAL := ArquivoCSV.Dados.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency;
+          ProdutoTributacao.TRIBESTADUAL := ArquivoCSV.Dados.FieldByName(cTRIBESTADUAL).AsCurrency;
+          ProdutoTributacao.TRIBMUNICIPAL := ArquivoCSV.Dados.FieldByName(cTRIBMUNICIPAL).AsCurrency;
+          ProdutoTributacao.VIGENCIAINICIO := ArquivoCSV.Dados.FieldByName(cVIGENCIAINICIO).AsDateTime;
+          ProdutoTributacao.VIGENCIAFIM := ArquivoCSV.Dados.FieldByName(cVIGENCIAFIM).AsDateTime;
+          ProdutoTributacao.CHAVE := ArquivoCSV.Dados.FieldByName(cCHAVE).AsString;
+          ProdutoTributacao.VERSAO := ArquivoCSV.Dados.FieldByName(cVERSAO).AsString;
+          ProdutoTributacao.FONTE := ArquivoCSV.Dados.FieldByName(cFONTE).AsString;
+          FRepositorioProdutoTributacao.InserirProdutoTributacao(ProdutoTributacao);
+        finally
+          ProdutoTributacao.Free;
+        end;
+      end;
+
+      ArquivoCSV.Dados.Next;
+    end;
+  end;
+end;
+
+end.
+
+

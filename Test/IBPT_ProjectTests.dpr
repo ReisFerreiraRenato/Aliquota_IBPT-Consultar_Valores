@@ -16,22 +16,26 @@ program IBPT_ProjectTests;
 
 uses
   DUnitTestRunner,
-  uRepositorioProduto in '..\Infra\uRepositorioProduto.pas',
+  uRepositorioProduto in '..\Infra\Persistence\uRepositorioProduto.pas',
   uConstantesGerais in '..\Utils\uConstantesGerais.pas',
   uFuncoes in '..\Utils\uFuncoes.pas',
   uLogErro in '..\Utils\uLogErro.pas',
   uVariaveisGlobais in '..\Utils\uVariaveisGlobais.pas',
   uConstantesBaseDados in '..\Utils\uConstantesBaseDados.pas',
-  uIRepositorioProduto in '..\Interfaces\uIRepositorioProduto.pas',
-  uConexaoBanco in '..\Data\uConexaoBanco.pas',
+  uIRepositorioProduto in '..\Infra\Persistence\uIRepositorioProduto.pas',
+  uConexaoBanco in '..\Infra\Persistence\uConexaoBanco.pas',
   uProduto in '..\Entidades\uProduto.pas',
   uConfiguracao in '..\Config\uConfiguracao.pas',
   uTestuRepositorioProduto in 'uTestuRepositorioProduto.pas',
   uConstantesTeste in 'uConstantesTeste.pas',
   uTestRepositorioProdutoTributacao in 'uTestRepositorioProdutoTributacao.pas',
-  uRepositorioProdutoTributacao in '..\Infra\uRepositorioProdutoTributacao.pas',
+  uRepositorioProdutoTributacao in '..\Infra\Persistence\uRepositorioProdutoTributacao.pas',
   uProdutoTributacao in '..\Entidades\uProdutoTributacao.pas',
-  uIRepositorioProdutoTributacao in '..\Interfaces\uIRepositorioProdutoTributacao.pas';
+  uIRepositorioProdutoTributacao in '..\Infra\Persistence\uIRepositorioProdutoTributacao.pas',
+  uTestuImportadorTabelas in 'uTestuImportadorTabelas.pas',
+  uImportadorTabelas in '..\Adapters\uImportadorTabelas.pas',
+  uTestArquivoCSV in 'uTestArquivoCSV.pas',
+  uArquivoCSV in '..\Comum\uArquivoCSV.pas';
 
 {$R *.RES}
 

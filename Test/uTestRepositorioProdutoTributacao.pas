@@ -192,8 +192,8 @@ var
 begin
   // Arrange
   codigoObter := 2;
-  uf :=  SIGLA_ESTADOS[26];
   produtoTributacaoInserido := CriarProdutoTributacaoParaTeste(codigoObter);
+  uf := produtoTributacaoInserido.UF;
   FRepositorio.InserirProdutoTributacao(produtoTributacaoInserido);
   FProdutoTributacaoInserido := produtoTributacaoInserido;
 

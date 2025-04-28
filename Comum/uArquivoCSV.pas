@@ -1,4 +1,4 @@
-unit ArquivoCSV;
+unit uArquivoCSV;
 
 interface
 
@@ -42,9 +42,9 @@ type
     /// <summary>
     /// Cria uma nova instância da classe TArquivoCSV.
     /// </summary>
-    /// <param name="pNomeArquivo">O nome do arquivo CSV.</param>
+    /// <param name="pUF">Sigla do estado</param>
     /// <param name="pDelimitador">O delimitador usado no arquivo CSV (padrão: ';').</param>
-    constructor Create(const pCaminhoArquivo: string; const pDelimitador: Char = ';'; pEncoding: TEncoding = nil);
+    constructor Create(const pUF: string; const pDelimitador: Char = ';'; pEncoding: TEncoding = nil); overload;
 
     /// <summary>
     /// Destrói a instância da classe TArquivoCSV.
@@ -74,6 +74,11 @@ type
     /// Obtém os dados do arquivo CSV como um TFDMemTable.
     /// </summary>
     property Dados: TFDMemTable read GetDados;
+
+    /// <summary>
+    /// Obtém o nome do arquivo CSV.
+    /// </summary>
+    property NomeArquivo: string read FNomeArquivo write FNomeArquivo;
 
   end;
 
@@ -147,9 +152,9 @@ begin
   end;
 end;
 
-constructor TArquivoCSV.Create(const pCaminhoArquivo: string; const pDelimitador: Char; pEncoding: TEncoding);
+constructor TArquivoCSV.Create(const pUF: string; const pDelimitador: Char; pEncoding: TEncoding);
 begin
-  FNomeArquivo := pCaminhoArquivo;
+  Self.BuscarCarregarPlanilhaEstado(pUF);
   FDelimitador := pDelimitador;
   FEncoding := IfThen(pEncoding = nil, TEncoding.UTF8, pEncoding);
   FDados := TFDMemTable.Create(nil);
@@ -214,7 +219,7 @@ begin
           CSVLinha.AtribuirValores(Valores);
           FDados.Append;
           FDados.FieldByName(cUF).AsString := siglaEstado;
-          FDados.FieldByName(cCodigo).AsInteger := CSVLinha.CodigoNCM;
+          //FDados.FieldByName(cCodigo).AsInteger := CSVLinha.CodigoNCM;
           FDados.FieldByName(cEx).AsInteger := CSVLinha.Ex;
           FDados.FieldByName(cTipo).AsInteger := CSVLinha.Tipo;
           FDados.FieldByName(cDescricao).AsString := CSVLinha.Descricao;
