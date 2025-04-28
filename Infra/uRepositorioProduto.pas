@@ -14,7 +14,8 @@ uses
   Data.DB,
   uConstantesGerais,
   uFuncoes,
-  uVariaveisGlobais;
+  uVariaveisGlobais,
+  uConstantesBaseDados;
 
 type
   /// <summary>
@@ -51,20 +52,27 @@ type
 
     /// <inheritdoc />
     function BuscarPorNcm(pNcm: string): TArray<TProduto>;
+
+    /// <inheritdoc />
+    procedure Inserir(const pProduto: TProduto);
+
+    /// <inheritdoc />
+    procedure Excluir(pCodigo: Integer);
   end;
 
 implementation
 
 const
-  SQL_PADRAO_PRODUTO = 'SELECT CODIGO, DESCRICAO, NCM FROM PRODUTO ';
+  SQL_PADRAO_PRODUTO =
+    'SELECT '+ cCODIGO +', '+ cDESCRICAO +', '+ cNCM +' FROM PRODUTO ';
 
 function TRepositorioProduto.ObterProdutoDoLeitor(
   pFDQuery: TFDQuery): TProduto;
 begin
   Result := TProduto.Create(
-    pFDQuery.FieldByName('CODIGO').AsInteger,
-    pFDQuery.FieldByName('DESCRICAO').AsString,
-    pFDQuery.FieldByName('NCM').AsString);
+    pFDQuery.FieldByName(cCODIGO).AsInteger,
+    pFDQuery.FieldByName(cDESCRICAO).AsString,
+    pFDQuery.FieldByName(cNCM).AsString);
 end;
 
 constructor TRepositorioProduto.Create(pConexaoBanco: TConexaoBanco);
@@ -81,7 +89,6 @@ function TRepositorioProduto.BuscarPorCodigo(
   pCodigo: Integer): TProduto;
 const
   CONDICAO_BUSCA_PRODUTO_NOME = ' WHERE CODIGO = :CODIGO';
-  P_CODIGO = 'CODIGO';
 var
   FDQuery: TFDQuery;
 begin
@@ -90,7 +97,7 @@ begin
   try
     FDQuery.Connection := FConexaoBanco.Conexao;
     FDQuery.SQL.Text := SQL_PADRAO_PRODUTO + CONDICAO_BUSCA_PRODUTO_NOME;
-    FDQuery.Params.ParamByName(P_CODIGO).AsInteger := pCodigo;
+    FDQuery.Params.ParamByName(cCODIGO).AsInteger := pCodigo;
     FDQuery.Open;
     if not FDQuery.IsEmpty then
       Result := ObterProdutoDoLeitor(FDQuery);
@@ -103,7 +110,6 @@ function TRepositorioProduto.BuscarPorDescricao(
   pDescricao: string): TArray<TProduto>;
 const
   CONDICAO_BUSCA_PRODUTO_DESCRICAO = ' WHERE UPPER(DESCRICAO) LIKE :DESCRICAO';
-  P_DESCRICAO = 'DESCRICAO';
 var
   FDQuery: TFDQuery;
   ListaProdutos: TList<TProduto>;
@@ -115,7 +121,7 @@ begin
   try
     FDQuery.Connection := FConexaoBanco.Conexao;
     FDQuery.SQL.Text := SQL_PADRAO_PRODUTO + CONDICAO_BUSCA_PRODUTO_DESCRICAO;
-    FDQuery.Params.ParamByName(P_DESCRICAO).AsString :=
+    FDQuery.Params.ParamByName(cDESCRICAO).AsString :=
         UpperCase(ConcatenaBuscaLiteralString(pDescricao));
     FDQuery.Open;
     while not FDQuery.Eof do
@@ -134,7 +140,6 @@ end;
 function TRepositorioProduto.BuscarPorNcm(pNcm: string): TArray<TProduto>;
 const
   CONDICAO_BUSCAR_PRODUTO_NCM = ' WHERE NCM = :NCM';
-  P_NCM = 'NCM';
 var
   FDQuery: TFDQuery;
   ListaProdutos: TList<TProduto>;
@@ -146,7 +151,7 @@ begin
   try
     FDQuery.Connection := FConexaoBanco.Conexao;
     FDQuery.SQL.Text := SQL_PADRAO_PRODUTO + CONDICAO_BUSCAR_PRODUTO_NCM;
-    FDQuery.Params.ParamByName(P_NCM).AsString := pNcm;
+    FDQuery.Params.ParamByName(cNCM).AsString := pNcm;
     FDQuery.Open;
     while not FDQuery.Eof do
     begin
@@ -158,6 +163,42 @@ begin
   finally
     FDQuery.Free;
     ListaProdutos.Free;
+  end;
+end;
+
+procedure TRepositorioProduto.Inserir(const pProduto: TProduto);
+const
+  SQL_INSERT_PRODUTO = 'INSERT INTO PRODUTO (CODIGO, DESCRICAO, NCM) VALUES (:Codigo, :Descricao, :Ncm)';
+var
+  FDQuery: TFDQuery;
+begin
+  FDQuery := TFDQuery.Create(nil);
+  try
+    FDQuery.Connection := FConexaoBanco.Conexao;
+    FDQuery.SQL.Text := SQL_INSERT_PRODUTO;
+    FDQuery.Params.ParamByName(cCODIGO).AsInteger := pProduto.Codigo;
+    FDQuery.Params.ParamByName(cDESCRICAO).AsString := pProduto.Descricao;
+    FDQuery.Params.ParamByName(cNCM).AsString := pProduto.Ncm;
+    FDQuery.ExecSQL;
+  finally
+    FDQuery.Free;
+  end;
+end;
+
+procedure TRepositorioProduto.Excluir(pCodigo: Integer);
+const
+  SQL_DELETE_PRODUTO = 'DELETE FROM PRODUTO WHERE CODIGO = :Codigo';
+var
+  FDQuery: TFDQuery;
+begin
+  FDQuery := TFDQuery.Create(nil);
+  try
+    FDQuery.Connection := FConexaoBanco.Conexao;
+    FDQuery.SQL.Text := SQL_DELETE_PRODUTO;
+    FDQuery.Params.ParamByName(cCODIGO).AsInteger := pCodigo;
+    FDQuery.ExecSQL;
+  finally
+    FDQuery.Free;
   end;
 end;
 

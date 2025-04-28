@@ -13,8 +13,6 @@ const
   NOME_ARQUIVO_LOG = 'conexao_banco_de_dados.log';
 
 procedure RegistrarErro(const Mensagem: string);
-var
-  ArquivoLog: TextFile;
 begin
   try
     TFile.AppendAllText(NOME_ARQUIVO_LOG, DateTimeToStr(Now) + ' - ' + Mensagem + sLineBreak);

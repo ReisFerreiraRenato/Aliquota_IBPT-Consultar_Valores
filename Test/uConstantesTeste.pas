@@ -2,22 +2,43 @@ unit uConstantesTeste;
 
 interface
 
+uses System.SysUtils;
+
 const
+  CHAVE_TESTE = 'CHA123';
   CODIGO_BUSCAR_POR_CODIGO = 1; //Semente de milho
   CODIGO_PRODUTO_INCORRETO = 'Código do produto incorreto';
-  CODIGO_PRODUTO_NAO_ENCONTRADO = 99999;
+  CODIGO_PRODUTO_NAO_ENCONTRADO = -99999;
+  CODIGO_PRODUTO_TESTE_NCM = '123456789';
+  CODIGO_PRODUTO_TESTE_NCM2 = '987654321';
+  CODIGO_PRODUTO_INSERIO_INCORRETO = 'Código do produto inserido incorreto';
+  CURRENCY_2 = 2.0;
+  CURRENCY_5_2 = 5.2;
+  CURRENCY_10_5 = 10.5;
 
   DESCRICAO_TESTE_PADRAO = 'SOJA';
   DESCRICAO_PRODUTO_INEXISTENTE = 'Produto Inexistente';
+
+  EXCLUIR_PRODUTO_NAO_EXISTENTE_NAO_CAUSOU_ERRO = 'Excluir produto não existente não causou erro ';
+
+  FONTE_TESTE = 'FonteTeste';
 
   NCM_BUSCAR_POR_NCM = '30029000';   //NCM ADJUVANTE
   NCM_BUSCAR_NCM_NAO_ENCONTRADO = '000000000';
   NCM_PRODUTO_INCORRETO = 'NCM do produto incorreto';
 
+  NOME_PRODUTO_TESTE_EXCLUIR = 'Produto Teste Excluir';
+  NOME_PRODUTO_TESTE_INSERIR = 'Produto Teste Inserir ';
+
   PRODUTO_NAO_ENCONTRADO = 'Produto não encontrado. ';
+  PRODUTO_NAO_ENCONTRADO_APOS_INSERCAO = PRODUTO_NAO_ENCONTRADO + ' Após inserção.';
   PRODUTO_NAO_ENCONTRADO_CODIGO = PRODUTO_NAO_ENCONTRADO + 'Codigo: ';
   PRODUTO_NAO_ENCONTRADO_DESCRICAO = PRODUTO_NAO_ENCONTRADO + 'Descricao: ';
   PRODUTO_NAO_ENCONTRADO_NCM = PRODUTO_NAO_ENCONTRADO + 'NCM: ';
+  PRODUTO_NAO_INSERIDO = 'Produto não foi inserido';
+  PRODUTO_NAO_EXCLUIDO = 'Produto não foi excluído';
+
+  VERSAO_TESTE = '1.0';
 
 implementation
 

@@ -3,7 +3,7 @@ unit uProduto;
 interface
 
 uses
-  System.SysUtils, System.Types;
+  System.SysUtils, System.Types, uConstantesGerais;
 
 type
   /// <summary>
@@ -55,9 +55,9 @@ implementation
 
 constructor TProduto.Create;
 begin
-  FCodigo := 0;
-  FDescricao := '';
-  FNcm := '';
+  FCodigo := INT_ZERO;
+  FDescricao := STRING_VAZIO;
+  FNcm := STRING_VAZIO;
 end;
 
 constructor TProduto.Create(pCodigo: Integer; pDescricao: string; pNcm: string);

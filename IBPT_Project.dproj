@@ -132,13 +132,17 @@
         <DCCReference Include="Utils\uLogErro.pas"/>
         <DCCReference Include="Principal\ArquivoCSV.pas"/>
         <DCCReference Include="Utils\uFuncoes.pas"/>
-        <DCCReference Include="Principal\uArquivoCSVLinha.pas"/>
         <DCCReference Include="Utils\uConstantesGerais.pas"/>
         <DCCReference Include="Entidades\uProduto.pas"/>
         <DCCReference Include="Utils\uVariaveisGlobais.pas"/>
         <DCCReference Include="Utils\uConstantesBaseDados.pas"/>
         <DCCReference Include="Interfaces\uIRepositorioProduto.pas"/>
         <DCCReference Include="Infra\uRepositorioProduto.pas"/>
+        <DCCReference Include="Entidades\uArquivoCSVLinha.pas"/>
+        <DCCReference Include="Entidades\uArquivoCSVLinhaProduto.pas"/>
+        <DCCReference Include="Entidades\uProdutoTributacao.pas"/>
+        <DCCReference Include="Infra\uRepositorioProdutoTributacao.pas"/>
+        <DCCReference Include="Interfaces\uIRepositorioProdutoTributacao.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

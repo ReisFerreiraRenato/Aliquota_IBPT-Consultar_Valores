@@ -28,7 +28,7 @@ type
     FChave: string;
     FVersao: string;
     FFonte: string;
-    FCodigoNCM: String;
+    FCodigoNCM: integer;
 
   public
 
@@ -45,7 +45,7 @@ type
     /// <summary>
     /// Obtém e define o código do produto.
     /// </summary>
-    property CodigoNCM: string read FCodigoNCM write FCodigoNCM;
+    property CodigoNCM: integer read FCodigoNCM write FCodigoNCM;
 
     /// <summary>
     /// Obtém e define o EX do produto.
@@ -122,7 +122,7 @@ uses uConstantesGerais;
 
 constructor TArquivoCSVLinha.Create;
 begin
-  FCodigoNCM := STRING_VAZIO;
+  FCodigoNCM := INT_ZERO;
   FEx := INT_ZERO;
   FTipo := INT_ZERO;
   FDescricao := STRING_VAZIO;
@@ -145,7 +145,7 @@ end;
 procedure TArquivoCSVLinha.AtribuirValores(const pValores: TArray<string>);
 begin
   if Length(pValores) >= INT_1 then
-    FCodigoNCM := pValores[INT_ZERO];
+    FCodigoNCM := StrToIntDef(pValores[INT_ZERO], INT_ZERO);
   if Length(pValores) >= INT_2 then
     FEx := StrToIntDef(pValores[INT_1], INT_ZERO);
   if Length(pValores) >= INT_3 then

@@ -54,6 +54,9 @@ const
   INT_20 = 20;
   INT_100 = 100;
   INT_255 = 255;
+  INT_99999 = 99999;
+  INT_10000 = 10000;
+  INT_20000 = 20000;
 
   /// <summary>
   /// Constante que armazena as siglas de todos os estados brasileiros e do Distrito Federal.

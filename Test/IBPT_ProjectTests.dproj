@@ -98,6 +98,10 @@
         <DCCReference Include="..\Config\uConfiguracao.pas"/>
         <DCCReference Include="uTestuRepositorioProduto.pas"/>
         <DCCReference Include="uConstantesTeste.pas"/>
+        <DCCReference Include="uTestRepositorioProdutoTributacao.pas"/>
+        <DCCReference Include="..\Infra\uRepositorioProdutoTributacao.pas"/>
+        <DCCReference Include="..\Entidades\uProdutoTributacao.pas"/>
+        <DCCReference Include="..\Interfaces\uIRepositorioProdutoTributacao.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

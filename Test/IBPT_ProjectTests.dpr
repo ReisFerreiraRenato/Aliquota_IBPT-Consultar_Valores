@@ -27,7 +27,11 @@ uses
   uProduto in '..\Entidades\uProduto.pas',
   uConfiguracao in '..\Config\uConfiguracao.pas',
   uTestuRepositorioProduto in 'uTestuRepositorioProduto.pas',
-  uConstantesTeste in 'uConstantesTeste.pas';
+  uConstantesTeste in 'uConstantesTeste.pas',
+  uTestRepositorioProdutoTributacao in 'uTestRepositorioProdutoTributacao.pas',
+  uRepositorioProdutoTributacao in '..\Infra\uRepositorioProdutoTributacao.pas',
+  uProdutoTributacao in '..\Entidades\uProdutoTributacao.pas',
+  uIRepositorioProdutoTributacao in '..\Interfaces\uIRepositorioProdutoTributacao.pas';
 
 {$R *.RES}
 

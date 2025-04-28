@@ -13,7 +13,7 @@ type
   /// Define as operações para acessar os dados dos produtos.
   /// </summary>
   IRepositorioProduto = interface
-    ['{12345678-1234-1234-1234-123456789012}'] // Substitua por um GUID único
+    ['{B54ED86E-211F-4803-AF46-0586DA66C583}']
     /// <summary>
     /// Busca um produto pelo código.
     /// </summary>
@@ -34,6 +34,18 @@ type
     /// <param name="pNcm">O NCM do produto.</param>
     /// <returns>Uma lista de produtos que correspondem ao NCM.</returns>
     function BuscarPorNcm(pNcm: string): TArray<TProduto>;
+
+    /// <summary>
+    /// Insere um novo produto no banco de dados.
+    /// </summary>
+    /// <param name="pProduto">Objeto TProduto a ser inserido.</param>
+    procedure Inserir(const pProduto: TProduto);
+
+    /// <summary>
+    /// Exclui um produto do banco de dados pelo código.
+    /// </summary>
+    /// <param name="pCodigo">Código do produto a ser excluído.</param>
+    procedure Excluir(pCodigo: Integer);
   end;
 
 implementation
