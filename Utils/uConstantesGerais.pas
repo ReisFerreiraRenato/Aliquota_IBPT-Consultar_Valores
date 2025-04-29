@@ -13,10 +13,13 @@ type
   TTipoSiglasEstados = array[0..26] of string;
 
 const
+
   ARQUIVO_CONFIGURACAO_NAO_ENCONTRADO = 'Arquivo de configuração não encontrado: ';
   ARQUIVO_NAO_ENCONTRADO = 'Arquivo não encontrado: ';
 
   BANCO_DADOS_VALIDOS: array[0..3] of string = ('Firebird', 'Oracle', 'SQLServer', 'MySQL');
+
+  CONEXAO_TESTADA_COM_SUCESSO = 'Conexão testada com sucesso';
 
   CURRENCY_VAZIO = - 99999.99;
   CURRENCY_ZERO = 0.0;
@@ -26,12 +29,18 @@ const
   DECIMAL_DOIS_DIGITOS = '0.00';
   DIRETORIO_TABELAS_IBPT = 'TabelasIBPT';
 
+  ERRO_ADICIONE_VALOR_CALCULADO = 'Adicione o valor a ser calculado. ';
   ERRO_AO_BUSCAR_PLANILHA = 'Erro ao buscar planilha: ';
   ERRO_AO_BUSCAR_PRODUTOS = 'Erro ao buscar produto(s). ';
   ERRO_AO_BUSCAR_DIRETORIO = 'Diretório não encontrado. Dir: ';
+  ERRO_AO_IMPORTAR_TABELAS = 'Erro ao importar tabela(s). ';
+  ERRO_AO_TESTAR_CONEXAO = 'Conexão com erro';
   ERRO_CONECTAR_BASE_DADOS = 'Erro ao conectar na base de dados. ';
   ERRO_ESCREVER_ARQUIVO = 'Erro ao escrever arquivo: ';
   ERRO_LER_ARQUIVO = 'Erro ao ler arquivo: ';
+  ERRO_SELECIONAR_PRODUTO = 'Favor selecionar o produto. ';
+  ERRO_VALOR_NEGATIVO = 'O valor não pode ser negativo. ';
+
   EXTENSAO_CSV = '.csv';
   EXTENSAO_XLS = '.xls';
   EXTENSAO_XLSX = '.xlsx';
@@ -75,6 +84,8 @@ const
   STRING_VAZIO = '';
   STRING_DEBUG = '\Win32\Debug';
   PASTA_TEST = '\Test';
+
+  TABELAS_IMPORTADA_COM_SUCESSO = 'Tabela(s) importada(s) com sucesso. ';
 
   ARQUIVO_PASTA_CONF_INI = 'Config\config.ini';
 

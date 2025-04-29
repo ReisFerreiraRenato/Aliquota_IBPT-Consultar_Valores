@@ -43,6 +43,12 @@ type
     /// <summary>
     /// Cria uma nova instância da classe TArquivoCSV.
     /// </summary>
+    /// <param name="pDelimitador">O delimitador usado no arquivo CSV (padrão: ';').</param>
+    constructor Create(const pDelimitador: Char = ';'; pEncoding: TEncoding = nil); overload;
+
+    /// <summary>
+    /// Cria uma nova instância da classe TArquivoCSV.
+    /// </summary>
     /// <param name="pUF">Sigla do estado</param>
     /// <param name="pDelimitador">O delimitador usado no arquivo CSV (padrão: ';').</param>
     constructor Create(const pUF: string; const pDelimitador: Char = ';'; pEncoding: TEncoding = nil); overload;
@@ -143,6 +149,13 @@ begin
   FEncoding := IfThen(pEncoding = nil, TEncoding.UTF8, pEncoding);
   FDados := TFDMemTable.Create(nil);
   Self.BuscarCarregarPlanilhaEstado(pUF);
+end;
+
+constructor TArquivoCSV.Create(const pDelimitador: Char; pEncoding: TEncoding);
+begin
+  FDelimitador := pDelimitador;
+  FEncoding := IfThen(pEncoding = nil, TEncoding.UTF8, pEncoding);
+  FDados := TFDMemTable.Create(nil);
 end;
 
 destructor TArquivoCSV.Destroy;

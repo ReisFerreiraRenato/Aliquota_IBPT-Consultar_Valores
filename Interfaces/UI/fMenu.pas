@@ -76,6 +76,7 @@ type
     eValorTributacaoEstadual: TEdit;
     eValorTributacaoImportadosFederal: TEdit;
     eValorTributacaoNacionalFederal: TEdit;
+    OpenDialog1: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure bTestarConexaoClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -156,21 +157,21 @@ procedure TMenu.bConsultarTributacaoProdutoClick(Sender: TObject);
 begin
   if (eValor.ValueCurrency = 0) then
   begin
-    ShowMessage('Adicione o valor a ser calculado. ');
+    ShowMessage(ERRO_ADICIONE_VALOR_CALCULADO);
     eValor.SetFocus;
     Exit;
   end;
 
   if (eValor.ValueCurrency < 0) then
   begin
-    ShowMessage('O valor não pode ser negativo. ');
+    ShowMessage(ERRO_VALOR_NEGATIVO);
     eValor.SetFocus;
     Exit;
   end;
 
   if (produtoSelecionado = nil) then
   begin
-    ShowMessage('Favor selecionar o produto. ');
+    ShowMessage(ERRO_SELECIONAR_PRODUTO);
     bBuscarProduto.SetFocus;
     Exit;
   end;
@@ -180,8 +181,23 @@ begin
 end;
 
 procedure TMenu.bImportarTabelaClick(Sender: TObject);
+var
+  importarTodasTabelas: TImportadorTabelas;
+  nomeCaminhoArquivo: string;
 begin
-  ShowMessage('Em desenvolvimento!');
+  importarTodasTabelas := TImportadorTabelas.Create;
+  try
+    if OpenDialog1.Execute then
+    begin
+      nomeCaminhoArquivo := OpenDialog1.FileName;
+      if importarTodasTabelas.ImportarTabela(nomeCaminhoArquivo) then
+        ShowMessage(TABELAS_IMPORTADA_COM_SUCESSO)
+      else
+        ShowMessage(ERRO_AO_IMPORTAR_TABELAS);
+    end;
+  finally
+    importarTodasTabelas.Free;
+  end;
 end;
 
 procedure TMenu.bImportarTodasTabelasClick(Sender: TObject);
@@ -191,9 +207,9 @@ begin
   importarTodasTabelas := TImportadorTabelas.Create;
   try
     if importarTodasTabelas.ImportarTabelas then
-      ShowMessage('Tabelas imporatas com sucesso. ')
+      ShowMessage(TABELAS_IMPORTADA_COM_SUCESSO)
     else
-      ShowMessage('Erro ao importar tabelas. ');
+      ShowMessage(ERRO_AO_IMPORTAR_TABELAS);
   finally
     importarTodasTabelas.Free;
   end;
@@ -202,9 +218,9 @@ end;
 procedure TMenu.bTestarConexaoClick(Sender: TObject);
 begin
   if gConexaoBanco.TestarConexao then
-    ShowMessage('Conexão testada com sucesso')
+    ShowMessage(CONEXAO_TESTADA_COM_SUCESSO)
   else
-    ShowMessage('Conexão com erro');
+    ShowMessage(ERRO_AO_TESTAR_CONEXAO);
 end;
 
 procedure TMenu.CarregarItensCombobox;
@@ -228,17 +244,17 @@ begin
 end;
 
 procedure TMenu.CarregarProdutoCompleto;
+const
+  captionProduto = 'Produto: {0} - Valor R$ {1} - Impostos R$ {2} = Líquido R$ {3}';
 begin
   if produtoCompleto <> nil then
   begin
     pnProdutoTributacao.Visible := True;
-    lbApresentacaoProduto.Caption := 'Produto: ' +
-      produtoCompleto.Descricao + ' - Valor R$ ' +
-      eValor.Text + ' - Impostos R$ ' + produtoCompleto.SomaTributacaoValor.ToString +
-      ' = Líquido R$ ' + produtoCompleto.ValorLiquido.ToString;
+    lbApresentacaoProduto.Caption := String.Format(captionProduto, [produtoCompleto.Descricao, eValor.Text,
+      produtoCompleto.SomaTributacaoValor.ToString, produtoCompleto.ValorLiquido.ToString]);
 
     eValorProduto.ValueCurrency := eValor.ValueCurrency;
-    eDescricaoProdutoSelecionado.Text := produtoCompleto.Descricao;
+    eDescricao.Text := produtoCompleto.Descricao;
     eCodigo.ValueInt := produtoCompleto.CodigoProduto;
     eEx.ValueInt := produtoCompleto.Ex;
     eSomaTributacao.Text := produtoCompleto.SomaTributacaoPorcentagem.ToString;

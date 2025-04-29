@@ -550,4 +550,10 @@ object Menu: TMenu
     TabOrder = 8
     OnClick = bImportarTodasTabelasClick
   end
+  object OpenDialog1: TOpenDialog
+    Filter = 'Csv|*.csv|Excel |*.xlx|Excel 2007|*.xlsx'
+    Title = 'Importar Planilhas'
+    Left = 528
+    Top = 168
+  end
 end
