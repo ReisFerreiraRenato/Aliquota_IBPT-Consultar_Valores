@@ -23,7 +23,7 @@ implementation
 function BuscarProdutoTributacao
   (const pCodigoProduto: Integer; const pUf: string): TArquivoCSVLinhaProduto;
 begin
-  //
+  Result := nil
 end;
 
 end.

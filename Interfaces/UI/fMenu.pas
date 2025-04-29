@@ -77,6 +77,7 @@ type
     eValorTributacaoImportadosFederal: TEdit;
     eValorTributacaoNacionalFederal: TEdit;
     OpenDialog1: TOpenDialog;
+    bLimparTela: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure bTestarConexaoClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -88,10 +89,12 @@ type
     procedure bConsultarTributacaoProdutoClick(Sender: TObject);
     procedure bImportarTabelaClick(Sender: TObject);
     procedure bImportarTodasTabelasClick(Sender: TObject);
+    procedure bLimparTelaClick(Sender: TObject);
   private
     { Private declarations }
     produtoSelecionado: Tproduto;
     produtoCompleto: TArquivoCSVLinhaProduto;
+    procedure LimparDados;
   public
     { Public declarations }
   end;
@@ -120,6 +123,17 @@ procedure TMenu.FormCreate(Sender: TObject);
 begin
   CarregarConfiguracao;
   CarregarItensCombobox;
+end;
+
+procedure TMenu.LimparDados;
+begin
+  produtoSelecionado := nil;
+  produtoCompleto := nil;
+  pnProdutoSelecionado.Visible := False;
+  pnProdutoTributacao.Visible := False;
+  eValor.ValueInt := 0;
+  cbUF.ItemIndex := 0;
+  bBuscarProduto.SetFocus;
 end;
 
 procedure TMenu.AparecerEsconderPainelProdutoSelecionado(pValor: Boolean);
@@ -213,6 +227,11 @@ begin
   finally
     importarTodasTabelas.Free;
   end;
+end;
+
+procedure TMenu.bLimparTelaClick(Sender: TObject);
+begin
+  LimparDados;
 end;
 
 procedure TMenu.bTestarConexaoClick(Sender: TObject);

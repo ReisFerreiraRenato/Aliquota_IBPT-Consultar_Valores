@@ -20,6 +20,12 @@ uses
   function ConcatenaBuscaLiteralString(pValor: string): string;
 
   /// <summary>
+  /// Funcao IntParaStr para converter com tratamento de erro
+  /// <param name="pValor">TArray<string></param>
+  /// <returns>string</returns>
+  function ConcatenaStrings(const pValores: TArray<string>): string;
+
+  /// <summary>
   /// Funcao IfThen para testar condicao
   /// result TEncoding
   /// </summary>
@@ -144,6 +150,17 @@ begin
     Result := StringParaCurrency(pValor.Replace(',','').Replace('.',','));
   except
     Result := CURRENCY_ZERO;
+  end;
+end;
+
+function ConcatenaStrings(const pValores: TArray<string>): string;
+var
+  contador: Integer;
+
+begin
+  for contador := Low(pValores) to High(pValores) do
+  begin
+    Result := Result + pValores[contador];
   end;
 end;
 
