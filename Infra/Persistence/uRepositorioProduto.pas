@@ -58,6 +58,9 @@ type
 
     /// <inheritdoc />
     procedure Excluir(pCodigo: Integer);
+
+    /// <inheritdoc />
+    procedure Atualizar(const pProduto: TProduto);
   end;
 
 implementation
@@ -83,6 +86,26 @@ end;
 destructor TRepositorioProduto.Destroy;
 begin
   inherited;
+end;
+
+procedure TRepositorioProduto.Atualizar(const pProduto: TProduto);
+const
+  SQL_UPDATE_PRODUTO =
+    'UPDATE PRODUTO SET DESCRICAO = :Descricao, NCM = :Ncm WHERE CODIGO = :Codigo';
+var
+  FDQuery: TFDQuery;
+begin
+  FDQuery := TFDQuery.Create(nil);
+  try
+    FDQuery.Connection := FConexaoBanco.Conexao;
+    FDQuery.SQL.Text := SQL_UPDATE_PRODUTO;
+    FDQuery.Params.ParamByName(cCODIGO).AsInteger := pProduto.Codigo;
+    FDQuery.Params.ParamByName(cDESCRICAO).AsString := pProduto.Descricao;
+    FDQuery.Params.ParamByName(cNCM).AsString := pProduto.Ncm;
+    FDQuery.ExecSQL;
+  finally
+    FDQuery.Free;
+  end;
 end;
 
 function TRepositorioProduto.BuscarPorCodigo(

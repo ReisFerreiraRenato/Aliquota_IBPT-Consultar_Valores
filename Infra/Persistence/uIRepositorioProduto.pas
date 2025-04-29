@@ -46,6 +46,12 @@ type
     /// </summary>
     /// <param name="pCodigo">Código do produto a ser excluído.</param>
     procedure Excluir(pCodigo: Integer);
+
+    /// <summary>
+    /// Atualiza os dados de um produto no banco de dados.
+    /// </summary>
+    /// <param name="pProduto">Objeto TProduto com os novos dados.</param>
+    procedure Atualizar(const pProduto: TProduto);
   end;
 
 implementation

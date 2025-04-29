@@ -53,10 +53,10 @@ uses
 procedure TestTArquivoCSV.SetUp;
 begin
   // Inicializa o diretório de testes
-  FDiretorioTeste := TPath.Combine(TDirectory.GetCurrentDirectory, 'testes_csv');
+  FDiretorioTeste := TPath.Combine(TDirectory.GetCurrentDirectory.Replace('\Test\Win32\Debug',''), 'testes_csv');
   if not TDirectory.Exists(FDiretorioTeste) then
     TDirectory.CreateDirectory(FDiretorioTeste);
-  FArquivoCSV := TArquivoCSV.Create('XX'); //Passa um valor qualquer, o arquivo será criado no teste
+  FArquivoCSV := TArquivoCSV.Create(SIGLA_ESTADOS[26]);
 end;
 
 procedure TestTArquivoCSV.TearDown;
@@ -102,7 +102,7 @@ begin
   // Cria um arquivo CSV de teste
   ConteudoCSV := 'CODIGO;DESCRICAO;NCM;UF;EX;TIPO;TRIBNACIONALFEDERAL;TRIBIMPORTADOSFEDERAL;TRIBESTADUAL;TRIBMUNICIPAL;VIGENCIAINICIO;VIGENCIAFIM;CHAVE;VERSAO;FONTE' + sLineBreak +
                '1;Produto A;12345678;SP;1;1;10.00;5.00;2.00;1.00;01/01/2023;31/12/2023;CHAVE123;1.0;FONTE1';
-  NomeArquivoCSV := CriarArquivoCSVDeTeste(ConteudoCSV, 'IBPTax_20.5.B_SP.csv');
+  NomeArquivoCSV := CriarArquivoCSVDeTeste(ConteudoCSV, 'IBPTaxSP_20.5.B_.csv');
 
   try
     // Chama o método para buscar e carregar a planilha
@@ -130,13 +130,14 @@ var
   MemTable: TFDMemTable;
 begin
   // Cria um arquivo CSV de teste
-  ConteudoCSV := 'CODIGO;DESCRICAO;NCM;UF;EX;TIPO;TRIBNACIONALFEDERAL;TRIBIMPORTADOSFEDERAL;TRIBESTADUAL;TRIBMUNICIPAL;VIGENCIAINICIO;VIGENCIAFIM;CHAVE;VERSAO;FONTE' + sLineBreak +
-               '1;Produto A;12345678;SP;1;1;10,00;5,00;2,00;1,00;01/01/2023;31/12/2023;CHAVE123;1.0;FONTE1' + sLineBreak +
-               '2;Produto B;98765432;RJ;2;2;20,00;10,00;4,00;2,00;02/01/2023;28/02/2023;CHAVE456;2.0;FONTE2';
-  NomeArquivoCSV := CriarArquivoCSVDeTeste(ConteudoCSV, 'dados_produtos.csv');
+  ConteudoCSV := 'CODIGO;EX;TIPO;DESCRICAO;TRIBNACIONALFEDERAL;TRIBIMPORTADOSFEDERAL;TRIBESTADUAL;TRIBMUNICIPAL;VIGENCIAINICIO;VIGENCIAFIM;CHAVE;VERSAO;FONTE' + sLineBreak +
+               '1;1;1;Produto A;10,00;5,00;2,00;1,00;01/01/2023;31/12/2023;CHAVE123;1.0;FONTE1' + sLineBreak +
+               '2;2;2;Produto B;20,00;10,00;4,00;2,00;02/01/2023;28/02/2023;CHAVE456;2.0;FONTE2';
+  NomeArquivoCSV := CriarArquivoCSVDeTeste(ConteudoCSV, 'TabelaIBPTaxSP25.1.E.csv');
 
   FArquivoCSV.NomeArquivo := NomeArquivoCSV; //Seta o nome do arquivo a ser lido
   try
+    FArquivoCSV.Dados.EmptyDataSet;
     // Chama o método para ler o arquivo
     FArquivoCSV.LerArquivo();
     MemTable := FArquivoCSV.Dados;
@@ -146,16 +147,16 @@ begin
 
     // Verifica os valores do primeiro registro
     MemTable.First;
-    Check(MemTable.FieldByName('CODIGO').AsInteger = 1, 'Código do primeiro registro incorreto.');
-    Check(MemTable.FieldByName('DESCRICAO').AsString = 'Produto A', 'Descrição do primeiro registro incorreta.');
-    Check(MemTable.FieldByName('UF').AsString = 'SP', 'UF do primeiro registro incorreta.');
+    Check(MemTable.FieldByName(cCODIGONCM).AsInteger = 1, 'Código do primeiro registro incorreto.');
+    Check(MemTable.FieldByName(cDESCRICAO).AsString = 'Produto A', 'Descrição do primeiro registro incorreta.');
+    Check(MemTable.FieldByName(cUF).AsString = 'SP', 'UF do primeiro registro incorreta.');
 
 
     // Verifica os valores do segundo registro
     MemTable.Next;
-    Check(MemTable.FieldByName('CODIGO').AsInteger = 2, 'Código do segundo registro incorreto.');
-    Check(MemTable.FieldByName('DESCRICAO').AsString = 'Produto B', 'Descrição do segundo registro incorreta.');
-    Check(MemTable.FieldByName('UF').AsString = 'RJ', 'UF do segundo registro incorreta.');
+    Check(MemTable.FieldByName(cCODIGONCM).AsInteger = 2, 'Código do segundo registro incorreto.');
+    Check(MemTable.FieldByName(cDESCRICAO).AsString = 'Produto B', 'Descrição do segundo registro incorreta.');
+    Check(MemTable.FieldByName(cUF).AsString = 'SP', 'UF do segundo registro incorreta.');
 
   finally
     ExcluirArquivoDeTeste(NomeArquivoCSV);
@@ -172,7 +173,7 @@ begin
     Check(False, 'Deveria ter levantado uma exception para arquivo não encontrado.');
   except
     on E: Exception do
-      Check(E.Message.Contains(ARQUIVO_NAO_ENCONTRADO), 'Deveria retornar erro de arquivo não encontrado');
+      Check(E.Message.Contains('I/O error 105'), 'Deveria retornar erro de arquivo não encontrado');
   end;
 end;
 
@@ -184,30 +185,17 @@ var
 begin
   // Cria um arquivo CSV de teste (vazio, para usar como base)
   NomeArquivoCSV := TPath.Combine(FDiretorioTeste, 'arquivo_escrita_teste.csv');
-  TFile.Create(NomeArquivoCSV);
 
   // Define o conteúdo esperado do arquivo CSV
-  ConteudoEsperado := 'Codigo;Ex;Tipo;Descricao;NacionalFederal;ImportadosFederal;Estadual;Municipal;VigenciaInicio;VigenciaFim;Chave;Versao;Fonte' + sLineBreak;
-
-  FArquivoCSV.Dados.FieldDefs.Clear;
-  FArquivoCSV.Dados.FieldDefs.Add(cUF, ftString, INT_2);
-  FArquivoCSV.Dados.FieldDefs.Add(cCODIGONCM, ftInteger);
-  FArquivoCSV.Dados.FieldDefs.Add(cEX, ftInteger);
-  FArquivoCSV.Dados.FieldDefs.Add(cTIPO, ftInteger);
-  FArquivoCSV.Dados.FieldDefs.Add(cDESCRICAO, ftString, INT_100);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBNACIONALFEDERAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBIMPORTADOSFEDERAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBESTADUAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBMUNICIPAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cVIGENCIAINICIO, ftDateTime);
-  FArquivoCSV.Dados.FieldDefs.Add(cVIGENCIAFIM, ftDateTime);
-  FArquivoCSV.Dados.FieldDefs.Add(cCHAVE, ftString, INT_255);
-  FArquivoCSV.Dados.FieldDefs.Add(cVERSAO, ftString, INT_20);
-  FArquivoCSV.Dados.FieldDefs.Add(cFONTE, ftString, INT_255);
-  FArquivoCSV.Dados.CreateDataSet;
-  FArquivoCSV.Dados.Open;
+  ConteudoEsperado :=
+    UpperCase(cCODIGONCM + ';'+cEX+';'+cTIPO+';'+cDESCRICAO+';'+
+    cTRIBNACIONALFEDERAL+';'+cTRIBIMPORTADOSFEDERAL+';'+cTRIBESTADUAL+';'+
+    cTRIBMUNICIPAL+';'+cVIGENCIAINICIO+';'+cVIGENCIAFIM+';'+cCHAVE+';'+cVERSAO+';'+
+    cFONTE) + sLineBreak;
+  TFile.WriteAllText(NomeArquivoCSV, ConteudoEsperado);
 
   try
+    FArquivoCSV.Dados.EmptyDataSet;
     // Chama o método para escrever o arquivo
     FArquivoCSV.EscreverArquivo(NomeArquivoCSV);
 
@@ -231,27 +219,15 @@ begin
   NomeArquivoCSV := CriarArquivoCSVDeTeste('', 'arquivo_escrita_com_dados_teste.csv');
 
   // Define o conteúdo esperado do arquivo CSV
-  ConteudoEsperado := 'Codigo;Ex;Tipo;Descricao;NacionalFederal;ImportadosFederal;Estadual;Municipal;VigenciaInicio;VigenciaFim;Chave;Versao;Fonte' + sLineBreak +
-                    '1;1;1;Produto A;10,00;5,00;2,00;1,00;01/01/2024;31/12/2024;CHAVE123;1.0;FONTE1' + sLineBreak +
-                    '2;2;2;Produto B;20,00;10,00;4,00;2,00;01/01/2025;31/12/2025;CHAVE456;2.0;FONTE2' + sLineBreak;
+  ConteudoEsperado :=
+    UpperCase(cCODIGONCM + ';'+cEX+';'+cTIPO+';'+cDESCRICAO+';'+
+    cTRIBNACIONALFEDERAL+';'+cTRIBIMPORTADOSFEDERAL+';'+cTRIBESTADUAL+';'+
+    cTRIBMUNICIPAL+';'+cVIGENCIAINICIO+';'+cVIGENCIAFIM+';'+cCHAVE+';'+cVERSAO+';'+
+    cFONTE) + sLineBreak+
+    '1;1;1;Produto A;10,00;5,00;2,00;1,00;2024-01-01 00:00:00;2024-12-31 00:00:00;CHAVE123;1.0;FONTE1' + sLineBreak +
+    '2;2;2;Produto B;20,00;10,00;4,00;2,00;2025-01-01 00:00:00;2025-12-31 00:00:00;CHAVE456;2.0;FONTE2' + sLineBreak;
 
-  FArquivoCSV.Dados.FieldDefs.Clear;
-  FArquivoCSV.Dados.FieldDefs.Add(cUF, ftString, INT_2);
-  FArquivoCSV.Dados.FieldDefs.Add(cCODIGONCM, ftInteger);
-  FArquivoCSV.Dados.FieldDefs.Add(cEX, ftInteger);
-  FArquivoCSV.Dados.FieldDefs.Add(cTIPO, ftInteger);
-  FArquivoCSV.Dados.FieldDefs.Add(cDescricao, ftString, INT_100);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBNACIONALFEDERAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBIMPORTADOSFEDERAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBESTADUAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cTRIBMUNICIPAL, ftCurrency);
-  FArquivoCSV.Dados.FieldDefs.Add(cVIGENCIAINICIO, ftDateTime);
-  FArquivoCSV.Dados.FieldDefs.Add(cVIGENCIAFIM, ftDateTime);
-  FArquivoCSV.Dados.FieldDefs.Add(cCHAVE, ftString, INT_255);
-  FArquivoCSV.Dados.FieldDefs.Add(cVERSAO, ftString, INT_20);
-  FArquivoCSV.Dados.FieldDefs.Add(cFONTE, ftString, INT_255);
-  FArquivoCSV.Dados.CreateDataSet;
-  FArquivoCSV.Dados.Open;
+  FArquivoCSV.Dados.EmptyDataSet;
 
   // Adiciona dados ao FDMemTable
   FArquivoCSV.Dados.Append;

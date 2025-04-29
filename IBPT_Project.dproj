@@ -144,6 +144,7 @@
         <DCCReference Include="Infra\Persistence\uRepositorioProduto.pas"/>
         <DCCReference Include="Infra\Persistence\uRepositorioProdutoTributacao.pas"/>
         <DCCReference Include="Comum\uArquivoCSV.pas"/>
+        <DCCReference Include="UseCase\uCalculoTributosProduto.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

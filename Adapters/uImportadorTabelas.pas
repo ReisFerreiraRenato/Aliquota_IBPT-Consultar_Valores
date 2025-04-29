@@ -17,7 +17,8 @@ uses
   uLogErro,
   FireDAC.Comp.Client,
   uConstantesGerais,
-  uConstantesBaseDados;
+  uConstantesBaseDados,
+  uVariaveisGlobais;
 
 type
   TImportadorTabelas = class(TObject)
@@ -51,7 +52,7 @@ implementation
 constructor TImportadorTabelas.Create;
 begin
   // Cria a conexão com o banco de dados.
-  FConexaoBanco := TConexaoBanco.Create;
+  FConexaoBanco := gConexaoBanco;
   FConexaoBanco.AbrirConexao;
 
   // Cria os repositórios para acessar os dados.
@@ -65,8 +66,6 @@ begin
   // Libera os recursos.
   FRepositorioProduto.Free;
   FRepositorioProdutoTributacao.Free;
-  FConexaoBanco.FecharConexao;
-  FConexaoBanco.Free;
   for var ArquivoCSV in FArquivosCSV do // Libera cada arquivo CSV na lista.
     ArquivoCSV.Free;
   FArquivosCSV.Free; // Libera a lista em si.
@@ -116,7 +115,6 @@ begin
   // Agora, itera sobre os arquivos CSV encontrados e processa os dados.
   for ArquivoCSV in FArquivosCSV do
   begin
-    ArquivoCSV.LerArquivo(); // Lê o arquivo CSV
 
     // Itera sobre os registros do arquivo CSV.
     ArquivoCSV.Dados.First;
@@ -125,7 +123,7 @@ begin
       // Obtém os valores dos campos da linha atual.
       UF := ArquivoCSV.Dados.FieldByName(cUF).AsString;
       CodigoProduto := ArquivoCSV.Dados.FieldByName(cCodigo).AsInteger;
-      ncm := ArquivoCSV.Dados.FieldByName(cNCM).AsString;
+      ncm := ArquivoCSV.Dados.FieldByName(cCODIGONCM).AsString;
 
       // Busca o produto pelo código.
       Produto := FRepositorioProduto.BuscarPorCodigo(CodigoProduto);
@@ -137,7 +135,7 @@ begin
         Produto := TProduto.Create(
           CodigoProduto,
           ArquivoCSV.Dados.FieldByName(cDESCRICAO).AsString,
-          ncm); // Supondo que a chave do CSV é o NCM
+          ncm);
         FRepositorioProduto.Inserir(Produto);
         Produto.Free;
       end;
@@ -150,6 +148,7 @@ begin
       begin
         // ProdutoTributacao existe, atualiza os dados.
         ProdutoTributacao.EX := ArquivoCSV.Dados.FieldByName(cEX).AsInteger;
+        ProdutoTributacao.UF := UF;
         ProdutoTributacao.TIPO := ArquivoCSV.Dados.FieldByName(cTIPO).AsInteger;
         ProdutoTributacao.TRIBNACIONALFEDERAL := ArquivoCSV.Dados.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency;
         ProdutoTributacao.TRIBIMPORTADOSFEDERAL := ArquivoCSV.Dados.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency;
@@ -186,7 +185,7 @@ begin
           ProdutoTributacao.Free;
         end;
       end;
-
+      UF := STRING_VAZIO;
       ArquivoCSV.Dados.Next;
     end;
   end;

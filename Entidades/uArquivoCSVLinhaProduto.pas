@@ -12,14 +12,16 @@ type
   /// </summary>
   TArquivoCSVLinhaProduto = class(TArquivoCSVLinha)
   private
-    FIDProduto: Integer;
+    FCodigoProduto: Integer;
     FUF: string;
     FSomaTributacaoValor: Currency;
     FSomaTributacaoPorcentagem: Currency;
+    FValorLiquido: Currency;
     FValorTribNacionalFederal: Currency;
     FValorTribImportadosFederal: Currency;
     FValorTribEstadual: Currency;
     FValorTribMunicipal: Currency;
+    FMensagem: string;
   public
     /// <summary>
     /// Cria uma nova instância da classe TArquivoCSVLinhaProduto.
@@ -41,7 +43,7 @@ type
     /// <summary>
     /// Obtém e define o ID do produto.
     /// </summary>
-    property IDProduto: Integer read FIDProduto write FIDProduto;
+    property CodigoProduto: Integer read FCodigoProduto write FCodigoProduto;
 
     /// <summary>
     /// Obtém e define a UF.
@@ -77,6 +79,16 @@ type
     /// Obtém e define o valor tributário municipal.
     /// </summary>
     property ValorTribMunicipal: Currency read FValorTribMunicipal write FValorTribMunicipal;
+
+    /// <summary>
+    /// Obtém e define o valor líquido do produto.
+    /// </summary>
+    property ValorLiquido: Currency read FValorLiquido write FValorLiquido;
+
+    /// <summary>
+    /// Obtém e define a mensagem.
+    /// </summary>
+    property Mensagem: string read FMensagem write FMensagem;
   end;
 
 implementation
@@ -86,7 +98,7 @@ uses uConstantesGerais;
 constructor TArquivoCSVLinhaProduto.Create;
 begin
   inherited Create;
-  FIDProduto := INT_ZERO;
+  FCodigoProduto := INT_ZERO;
   FUF := STRING_VAZIO;
   FSomaTributacaoValor := CURRENCY_ZERO;
   FSomaTributacaoPorcentagem := CURRENCY_ZERO;
@@ -94,6 +106,8 @@ begin
   FValorTribImportadosFederal := CURRENCY_ZERO;
   FValorTribEstadual := CURRENCY_ZERO;
   FValorTribMunicipal := CURRENCY_ZERO;
+  FValorLiquido := CURRENCY_ZERO;
+  FMensagem := STRING_VAZIO;
 end;
 
 destructor TArquivoCSVLinhaProduto.Destroy;
@@ -106,7 +120,7 @@ begin
   inherited AtribuirValores(pValores);
 
   if Length(pValores) >= 14 then
-    FIDProduto := StrToIntDef(pValores[13], INT_ZERO);
+    FCodigoProduto := StrToIntDef(pValores[13], INT_ZERO);
   if Length(pValores) >= 15 then
     FUF := pValores[14];
   if Length(pValores) >= 16 then
@@ -121,6 +135,10 @@ begin
     FValorTribEstadual := StrToCurrDef(pValores[19], CURRENCY_ZERO);
   if Length(pValores) >= 21 then
     FValorTribMunicipal := StrToCurrDef(pValores[20], CURRENCY_ZERO);
+  if Length(pValores) >= 22 then
+    FValorLiquido := StrToCurrDef(pValores[21], CURRENCY_ZERO);
+  if Length(pValores) >= 23 then
+    FMensagem := pValores[22];
 end;
 
 end.

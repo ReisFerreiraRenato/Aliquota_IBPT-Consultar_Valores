@@ -23,7 +23,6 @@ uses
   uVariaveisGlobais in '..\Utils\uVariaveisGlobais.pas',
   uConstantesBaseDados in '..\Utils\uConstantesBaseDados.pas',
   uIRepositorioProduto in '..\Infra\Persistence\uIRepositorioProduto.pas',
-  uConexaoBanco in '..\Infra\Persistence\uConexaoBanco.pas',
   uProduto in '..\Entidades\uProduto.pas',
   uConfiguracao in '..\Config\uConfiguracao.pas',
   uTestuRepositorioProduto in 'uTestuRepositorioProduto.pas',
@@ -32,10 +31,14 @@ uses
   uRepositorioProdutoTributacao in '..\Infra\Persistence\uRepositorioProdutoTributacao.pas',
   uProdutoTributacao in '..\Entidades\uProdutoTributacao.pas',
   uIRepositorioProdutoTributacao in '..\Infra\Persistence\uIRepositorioProdutoTributacao.pas',
-  uTestuImportadorTabelas in 'uTestuImportadorTabelas.pas',
   uImportadorTabelas in '..\Adapters\uImportadorTabelas.pas',
   uTestArquivoCSV in 'uTestArquivoCSV.pas',
-  uArquivoCSV in '..\Comum\uArquivoCSV.pas';
+  uArquivoCSV in '..\Comum\uArquivoCSV.pas',
+  uArquivoCSVLinha in '..\Entidades\uArquivoCSVLinha.pas',
+  uTestImportadorTabelas in 'uTestImportadorTabelas.pas',
+  uConexaoBanco in '..\Infra\Persistence\uConexaoBanco.pas',
+  uCalculoTributosProduto in '..\UseCase\uCalculoTributosProduto.pas',
+  uTestuCalculoTributosProduto in 'uTestuCalculoTributosProduto.pas';
 
 {$R *.RES}
 

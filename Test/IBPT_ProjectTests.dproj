@@ -75,6 +75,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <DCC_UnitSearchPath>C:\Projetos\Aliquota_IBPT-Consultar_Valores\Entidades;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -93,7 +97,6 @@
         <DCCReference Include="..\Utils\uVariaveisGlobais.pas"/>
         <DCCReference Include="..\Utils\uConstantesBaseDados.pas"/>
         <DCCReference Include="..\Infra\Persistence\uIRepositorioProduto.pas"/>
-        <DCCReference Include="..\Infra\Persistence\uConexaoBanco.pas"/>
         <DCCReference Include="..\Entidades\uProduto.pas"/>
         <DCCReference Include="..\Config\uConfiguracao.pas"/>
         <DCCReference Include="uTestuRepositorioProduto.pas"/>
@@ -102,10 +105,14 @@
         <DCCReference Include="..\Infra\Persistence\uRepositorioProdutoTributacao.pas"/>
         <DCCReference Include="..\Entidades\uProdutoTributacao.pas"/>
         <DCCReference Include="..\Infra\Persistence\uIRepositorioProdutoTributacao.pas"/>
-        <DCCReference Include="uTestuImportadorTabelas.pas"/>
         <DCCReference Include="..\Adapters\uImportadorTabelas.pas"/>
         <DCCReference Include="uTestArquivoCSV.pas"/>
         <DCCReference Include="..\Comum\uArquivoCSV.pas"/>
+        <DCCReference Include="..\Entidades\uArquivoCSVLinha.pas"/>
+        <DCCReference Include="uTestImportadorTabelas.pas"/>
+        <DCCReference Include="..\Infra\Persistence\uConexaoBanco.pas"/>
+        <DCCReference Include="..\UseCase\uCalculoTributosProduto.pas"/>
+        <DCCReference Include="uTestuCalculoTributosProduto.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -126,6 +133,10 @@
                 <Source>
                     <Source Name="MainSource">IBPT_ProjectTests.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">

@@ -19,7 +19,8 @@ uses
   uIRepositorioProdutoTributacao in 'Infra\Persistence\uIRepositorioProdutoTributacao.pas',
   uRepositorioProduto in 'Infra\Persistence\uRepositorioProduto.pas',
   uRepositorioProdutoTributacao in 'Infra\Persistence\uRepositorioProdutoTributacao.pas',
-  uArquivoCSV in 'Comum\uArquivoCSV.pas';
+  uArquivoCSV in 'Comum\uArquivoCSV.pas',
+  uCalculoTributosProduto in 'UseCase\uCalculoTributosProduto.pas';
 
 {$R *.res}
 

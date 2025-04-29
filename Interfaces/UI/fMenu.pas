@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.Buttons, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Stan.Intf,
-  FireDAC.Comp.UI;
+  FireDAC.Comp.UI, Data.DB, Datasnap.DBClient;
 
 type
   TMenu = class(TForm)

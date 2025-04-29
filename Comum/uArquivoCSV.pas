@@ -12,7 +12,8 @@ uses
   uFuncoes,
   uArquivoCSVLinha,
   uConstantesGerais,
-  uLogErro;
+  uLogErro,
+  uConstantesBaseDados;
 
 type
 
@@ -84,22 +85,6 @@ type
 
 implementation
 
-const
-  cUF = 'UF';
-  cCodigo = 'Codigo';
-  cEx = 'Ex';
-  cTipo = 'Tipo';
-  cDescricao = 'Descricao';
-  cNacionalFederal = 'NacionalFederal';
-  cImportadosFederal = 'ImportadosFederal';
-  cEstadual = 'Estadual';
-  cMunicipal = 'Municipal';
-  cVigenciaInicio = 'VigenciaInicio';
-  cVigenciaFim = 'VigenciaFim';
-  cChave = 'Chave';
-  cVersao = 'Versao';
-  cFonte = 'Fonte';
-
 function TArquivoCSV.BuscarCarregarPlanilhaEstado(const pSiglaEstado: string): Boolean;
 var
   diretorio: string;
@@ -110,7 +95,7 @@ var
 begin
   Result := False;
   arquivoEncontrado := STRING_VAZIO;
-  diretorio := GetCurrentDir.Replace(STRING_DEBUG, STRING_VAZIO);
+  diretorio := (GetCurrentDir).Replace(STRING_DEBUG, STRING_VAZIO).Replace('\Test\Win32\Debug','');
   diretorio := System.IOUtils.TPath.Combine(diretorio, DIRETORIO_TABELAS_IBPT);
 
   if not DirectoryExists(diretorio) then
@@ -154,10 +139,10 @@ end;
 
 constructor TArquivoCSV.Create(const pUF: string; const pDelimitador: Char; pEncoding: TEncoding);
 begin
-  Self.BuscarCarregarPlanilhaEstado(pUF);
   FDelimitador := pDelimitador;
   FEncoding := IfThen(pEncoding = nil, TEncoding.UTF8, pEncoding);
   FDados := TFDMemTable.Create(nil);
+  Self.BuscarCarregarPlanilhaEstado(pUF);
 end;
 
 destructor TArquivoCSV.Destroy;
@@ -172,6 +157,16 @@ var
   Valores: TArray<string>;
   CSVLinha: TArquivoCSVLinha;
   siglaEstado: string;
+
+  procedure RemoverAspas;
+  var
+    cont: integer;
+  begin
+    for cont := 0 to Length(Valores) - 1 do
+    begin
+      Valores[cont] := Valores[cont].Replace('"','').Replace('(','').Replace(')','');
+    end;
+  end;
 begin
   if not FileExists(FNomeArquivo) then
   begin
@@ -181,23 +176,26 @@ begin
 
   siglaEstado := ExtrairSiglaNomeArquivo(FNomeArquivo);
 
-  FDados.FieldDefs.Clear;
-  FDados.FieldDefs.Add(cUF, ftString, INT_2);
-  FDados.FieldDefs.Add(cCodigo, ftInteger);
-  FDados.FieldDefs.Add(cEx, ftInteger);
-  FDados.FieldDefs.Add(cTipo, ftInteger);
-  FDados.FieldDefs.Add(cDescricao, ftString, INT_100);
-  FDados.FieldDefs.Add(cNacionalFederal, ftCurrency);
-  FDados.FieldDefs.Add(cImportadosFederal, ftCurrency);
-  FDados.FieldDefs.Add(cEstadual, ftCurrency);
-  FDados.FieldDefs.Add(cMunicipal, ftCurrency);
-  FDados.FieldDefs.Add(cVigenciaInicio, ftDateTime);
-  FDados.FieldDefs.Add(cVigenciaFim, ftDateTime);
-  FDados.FieldDefs.Add(cChave, ftString, INT_255);
-  FDados.FieldDefs.Add(cVersao, ftString, INT_20);
-  FDados.FieldDefs.Add(cFonte, ftString, INT_255);
-  FDados.CreateDataSet;
-  FDados.Open;
+  if not FDados.Active then
+  begin
+    FDados.FieldDefs.Clear;
+    FDados.FieldDefs.Add(cUF, ftString, INT_2);
+    FDados.FieldDefs.Add(cCODIGONCM, ftInteger);
+    FDados.FieldDefs.Add(cEX, ftInteger);
+    FDados.FieldDefs.Add(cTIPO, ftInteger);
+    FDados.FieldDefs.Add(cDESCRICAO, ftString, INT_100);
+    FDados.FieldDefs.Add(cTRIBNACIONALFEDERAL, ftCurrency);
+    FDados.FieldDefs.Add(cTRIBIMPORTADOSFEDERAL, ftCurrency);
+    FDados.FieldDefs.Add(cTRIBESTADUAL, ftCurrency);
+    FDados.FieldDefs.Add(cTRIBMUNICIPAL, ftCurrency);
+    FDados.FieldDefs.Add(cVIGENCIAINICIO, ftDateTime);
+    FDados.FieldDefs.Add(cVIGENCIAFIM, ftDateTime);
+    FDados.FieldDefs.Add(cCHAVE, ftString, INT_255);
+    FDados.FieldDefs.Add(cVERSAO, ftString, INT_20);
+    FDados.FieldDefs.Add(cFONTE, ftString, INT_255);
+    FDados.CreateDataSet;
+    FDados.Open;
+  end;
 
   try
     var
@@ -214,24 +212,25 @@ begin
       begin
         Linha := leitor.ReadLine();
         Valores := Linha.Split(FDelimitador);
+        RemoverAspas;
         CSVLinha := TArquivoCSVLinha.Create;
         try
           CSVLinha.AtribuirValores(Valores);
           FDados.Append;
           FDados.FieldByName(cUF).AsString := siglaEstado;
-          //FDados.FieldByName(cCodigo).AsInteger := CSVLinha.CodigoNCM;
-          FDados.FieldByName(cEx).AsInteger := CSVLinha.Ex;
-          FDados.FieldByName(cTipo).AsInteger := CSVLinha.Tipo;
-          FDados.FieldByName(cDescricao).AsString := CSVLinha.Descricao;
-          FDados.FieldByName(cNacionalFederal).AsCurrency := CSVLinha.NacionalFederal;
-          FDados.FieldByName(cImportadosFederal).AsCurrency := CSVLinha.ImportadosFederal;
-          FDados.FieldByName(cEstadual).AsCurrency := CSVLinha.Estadual;
-          FDados.FieldByName(cMunicipal).AsCurrency := CSVLinha.Municipal;
-          FDados.FieldByName(cVigenciaInicio).AsDateTime := CSVLinha.VigenciaInicio;
-          FDados.FieldByName(cVigenciaFim).AsDateTime := CSVLinha.VigenciaFim;
-          FDados.FieldByName(cChave).AsString := CSVLinha.Chave;
-          FDados.FieldByName(cVersao).AsString := CSVLinha.Versao;
-          FDados.FieldByName(cFonte).AsString := CSVLinha.Fonte;
+          FDados.FieldByName(cCODIGONCM).AsInteger := CSVLinha.CodigoNCM;
+          FDados.FieldByName(cEX).AsInteger := CSVLinha.Ex;
+          FDados.FieldByName(cTIPO).AsInteger := CSVLinha.Tipo;
+          FDados.FieldByName(cDESCRICAO).AsString := CSVLinha.Descricao;
+          FDados.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency := CSVLinha.NacionalFederal;
+          FDados.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency := CSVLinha.ImportadosFederal;
+          FDados.FieldByName(cTRIBESTADUAL).AsCurrency := CSVLinha.Estadual;
+          FDados.FieldByName(cTRIBMUNICIPAL).AsCurrency := CSVLinha.Municipal;
+          FDados.FieldByName(cVIGENCIAINICIO).AsDateTime := CSVLinha.VigenciaInicio;
+          FDados.FieldByName(cVIGENCIAFIM).AsDateTime := CSVLinha.VigenciaFim;
+          FDados.FieldByName(cCHAVE).AsString := CSVLinha.Chave;
+          FDados.FieldByName(cVERSAO).AsString := CSVLinha.Versao;
+          FDados.FieldByName(cFONTE).AsString := CSVLinha.Fonte;
           FDados.Post;
         finally
           CSVLinha.Free;
@@ -255,38 +254,38 @@ begin
     try
       if pIncluirCabecalho then
       begin
-        Escritor.Write(cCodigo + FDelimitador);
-        Escritor.Write(cEx + FDelimitador);
-        Escritor.Write(cTipo + FDelimitador);
-        Escritor.Write(cDescricao + FDelimitador);
-        Escritor.Write(cNacionalFederal + FDelimitador);
-        Escritor.Write(cImportadosFederal + FDelimitador);
-        Escritor.Write(cEstadual + FDelimitador);
-        Escritor.Write(cMunicipal + FDelimitador);
-        Escritor.Write(cVigenciaInicio + FDelimitador);
-        Escritor.Write(cVigenciaFim + FDelimitador);
-        Escritor.Write(cChave + FDelimitador);
-        Escritor.Write(cVersao + FDelimitador);
-        Escritor.Write(cFonte);
+        Escritor.Write(cCODIGONCM + FDelimitador);
+        Escritor.Write(cEX + FDelimitador);
+        Escritor.Write(cTIPO + FDelimitador);
+        Escritor.Write(cDESCRICAO + FDelimitador);
+        Escritor.Write(cTRIBNACIONALFEDERAL + FDelimitador);
+        Escritor.Write(cTRIBIMPORTADOSFEDERAL + FDelimitador);
+        Escritor.Write(cTRIBESTADUAL + FDelimitador);
+        Escritor.Write(cTRIBMUNICIPAL + FDelimitador);
+        Escritor.Write(cVIGENCIAINICIO + FDelimitador);
+        Escritor.Write(cVIGENCIAFIM + FDelimitador);
+        Escritor.Write(cCHAVE + FDelimitador);
+        Escritor.Write(cVERSAO + FDelimitador);
+        Escritor.Write(cFONTE);
         Escritor.WriteLine();
       end;
 
       FDados.First;
       while not FDados.Eof do
       begin
-        Escritor.Write(FDados.FieldByName(cCodigo).AsString + FDelimitador);
-        Escritor.Write(FDados.FieldByName(cEx).AsString + FDelimitador);
-        Escritor.Write(FDados.FieldByName(cTipo).AsString + FDelimitador);
-        Escritor.Write(FDados.FieldByName(cDescricao).AsString + FDelimitador);
-        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cNacionalFederal).AsCurrency) + FDelimitador);
-        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cImportadosFederal).AsCurrency) + FDelimitador);
-        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cEstadual).AsCurrency) + FDelimitador);
-        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cMunicipal).AsCurrency) + FDelimitador);
-        Escritor.Write(FormatDateTime(DATA_YYYY_MM_DD, FDados.FieldByName(cVigenciaInicio).AsDateTime) + FDelimitador);
-        Escritor.Write(FormatDateTime(DATA_YYYY_MM_DD, FDados.FieldByName(cVigenciaFim).AsDateTime) + FDelimitador);
-        Escritor.Write(FDados.FieldByName(cChave).AsString + FDelimitador);
-        Escritor.Write(FDados.FieldByName(cVersao).AsString + FDelimitador);
-        Escritor.Write(FDados.FieldByName(cFonte).AsString);
+        Escritor.Write(FDados.FieldByName(cCODIGONCM).AsString + FDelimitador);
+        Escritor.Write(FDados.FieldByName(cEX).AsString + FDelimitador);
+        Escritor.Write(FDados.FieldByName(cTIPO).AsString + FDelimitador);
+        Escritor.Write(FDados.FieldByName(cDESCRICAO).AsString + FDelimitador);
+        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency) + FDelimitador);
+        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency) + FDelimitador);
+        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cTRIBESTADUAL).AsCurrency) + FDelimitador);
+        Escritor.Write(FormatFloat(DECIMAL_DOIS_DIGITOS, FDados.FieldByName(cTRIBMUNICIPAL).AsCurrency) + FDelimitador);
+        Escritor.Write(FormatDateTime(DATA_YYYY_MM_DD, FDados.FieldByName(cVIGENCIAINICIO).AsDateTime) + FDelimitador);
+        Escritor.Write(FormatDateTime(DATA_YYYY_MM_DD, FDados.FieldByName(cVIGENCIAFIM).AsDateTime) + FDelimitador);
+        Escritor.Write(FDados.FieldByName(cCHAVE).AsString + FDelimitador);
+        Escritor.Write(FDados.FieldByName(cVERSAO).AsString + FDelimitador);
+        Escritor.Write(FDados.FieldByName(cFONTE).AsString);
         Escritor.WriteLine();
         FDados.Next;
       end;
