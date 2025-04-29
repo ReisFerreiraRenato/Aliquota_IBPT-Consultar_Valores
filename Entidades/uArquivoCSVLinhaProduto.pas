@@ -41,6 +41,12 @@ type
     procedure AtribuirValores(const pValores: TArray<string>); override;
 
     /// <summary>
+    /// Clona a classe passada por parâmetro
+    /// </summary>
+    /// <param name="pObjeto">TArquivoCSVLinhaProduto</param>
+    procedure Clone(const pObjeto: TArquivoCSVLinhaProduto); overload;
+
+    /// <summary>
     /// Obtém e define o ID do produto.
     /// </summary>
     property CodigoProduto: Integer read FCodigoProduto write FCodigoProduto;
@@ -94,6 +100,37 @@ type
 implementation
 
 uses uConstantesGerais;
+
+procedure TArquivoCSVLinhaProduto.Clone(const pObjeto: TArquivoCSVLinhaProduto);
+begin
+  if Assigned(pObjeto) then
+  begin
+    Self.CodigoNCM := pObjeto.CodigoNCM;
+    Self.Ex := pObjeto.Ex;
+    Self.Tipo := pObjeto.Tipo;
+    Self.Descricao := pObjeto.Descricao;
+    Self.NacionalFederal := pObjeto.NacionalFederal;
+    Self.ImportadosFederal := pObjeto.ImportadosFederal;
+    Self.Estadual := pObjeto.Estadual;
+    Self.Municipal := pObjeto.Municipal;
+    Self.VigenciaInicio := pObjeto.VigenciaInicio;
+    Self.VigenciaFim := pObjeto.VigenciaFim;
+    Self.Chave := pObjeto.Chave;
+    Self.Versao := pObjeto.Versao;
+    Self.Fonte := pObjeto.Fonte;
+    Self.CodigoProduto := pObjeto.CodigoProduto;
+    Self.CodigoProduto := pObjeto.CodigoProduto;
+    Self.UF := pObjeto.UF;
+    Self.SomaTributacaoValor := pObjeto.SomaTributacaoValor;
+    Self.SomaTributacaoPorcentagem := pObjeto.SomaTributacaoPorcentagem;
+    Self.ValorLiquido := pObjeto.ValorLiquido;
+    Self.ValorTribNacionalFederal := pObjeto.ValorTribNacionalFederal;
+    Self.ValorTribImportadosFederal := pObjeto.ValorTribImportadosFederal;
+    Self.ValorTribEstadual := pObjeto.ValorTribEstadual;
+    Self.ValorTribMunicipal := pObjeto.ValorTribMunicipal;
+    Self.Mensagem := pObjeto.Mensagem;
+  end;
+end;
 
 constructor TArquivoCSVLinhaProduto.Create;
 begin

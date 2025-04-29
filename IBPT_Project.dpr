@@ -20,7 +20,11 @@ uses
   uRepositorioProduto in 'Infra\Persistence\uRepositorioProduto.pas',
   uRepositorioProdutoTributacao in 'Infra\Persistence\uRepositorioProdutoTributacao.pas',
   uArquivoCSV in 'Comum\uArquivoCSV.pas',
-  uCalculoTributosProduto in 'UseCase\uCalculoTributosProduto.pas';
+  uCalculoTributosProduto in 'UseCase\uCalculoTributosProduto.pas',
+  fBuscarProduto in 'Interfaces\UI\fBuscarProduto.pas' {BuscarProduto},
+  uBuscarProduto in 'UseCase\uBuscarProduto.pas',
+  uBuscarTributacaoProduto in 'UseCase\uBuscarTributacaoProduto.pas',
+  uBuscarcalculoTributosProduto in 'UseCase\uBuscarcalculoTributosProduto.pas';
 
 {$R *.res}
 
@@ -28,5 +32,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMenu, Menu);
+  Application.CreateForm(TBuscarProduto, BuscarProduto);
   Application.Run;
 end.

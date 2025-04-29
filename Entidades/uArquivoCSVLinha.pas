@@ -43,6 +43,12 @@ type
     destructor Destroy; override;
 
     /// <summary>
+    /// Clona a classe passada por parâmetro
+    /// </summary>
+    /// <param name="pObjeto">TArquivoCSVLinha</param>
+    procedure Clone(const pObjeto: TArquivoCSVLinha); overload;
+
+    /// <summary>
     /// Obtém e define o código do produto.
     /// </summary>
     property CodigoNCM: integer read FCodigoNCM write FCodigoNCM;
@@ -116,9 +122,29 @@ type
 
 implementation
 
-uses uConstantesGerais;
+uses uConstantesGerais, uFuncoes;
 
 { TArquivoCSVLinha }
+
+procedure TArquivoCSVLinha.Clone(const pObjeto: TArquivoCSVLinha);
+begin
+  if Assigned(pObjeto) then
+  begin
+    Self.FCodigoNCM := pObjeto.FCodigoNCM;
+    Self.FEx := pObjeto.FEx;
+    Self.FTipo := pObjeto.FTipo;
+    Self.FDescricao := pObjeto.FDescricao;
+    Self.FNacionalFederal := pObjeto.FNacionalFederal;
+    Self.FImportadosFederal := pObjeto.FImportadosFederal;
+    Self.FEstadual := pObjeto.FEstadual;
+    Self.FMunicipal := pObjeto.FMunicipal;
+    Self.FVigenciaInicio := pObjeto.FVigenciaInicio;
+    Self.FVigenciaFim := pObjeto.FVigenciaFim;
+    Self.FChave := pObjeto.FChave;
+    Self.FVersao := pObjeto.FVersao;
+    Self.FFonte := pObjeto.FFonte;
+  end;
+end;
 
 constructor TArquivoCSVLinha.Create;
 begin
@@ -153,13 +179,13 @@ begin
   if Length(pValores) >= INT_4 then
     FDescricao := pValores[INT_3];
   if Length(pValores) >= INT_5 then
-    FNacionalFederal := StrToCurrDef(pValores[INT_4], CURRENCY_ZERO);
+    FNacionalFederal := StringParaCurrencyDef(pValores[INT_4]);
   if Length(pValores) >= INT_6 then
-    FImportadosFederal := StrToCurrDef(pValores[INT_5], CURRENCY_ZERO);
+    FImportadosFederal := StringParaCurrencyDef(pValores[INT_5]);
   if Length(pValores) >= INT_7 then
-    FEstadual := StrToCurrDef(pValores[INT_6], CURRENCY_ZERO);
+    FEstadual := StringParaCurrencyDef(pValores[INT_6]);
   if Length(pValores) >= INT_8 then
-    FMunicipal := StrToCurrDef(pValores[INT_7], CURRENCY_ZERO);
+    FMunicipal := StringParaCurrencyDef(pValores[INT_7]);
   if Length(pValores) >= INT_9 then
     FVigenciaInicio :=  StrToDateDef(pValores[INT_8], DATETIME_VAZIO);
   if Length(pValores) >= INT_10 then

@@ -9,6 +9,8 @@ uses
   uIRepositorioProduto,
   uConexaoBanco,
   FireDAC.Comp.Client,
+  Firedac.DApt,
+  FireDAC.Stan.Async,
   System.Generics.Collections,
   FireDAC.Stan.Param,
   Data.DB,

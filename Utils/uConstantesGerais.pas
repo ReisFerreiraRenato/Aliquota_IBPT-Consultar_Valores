@@ -27,7 +27,9 @@ const
   DIRETORIO_TABELAS_IBPT = 'TabelasIBPT';
 
   ERRO_AO_BUSCAR_PLANILHA = 'Erro ao buscar planilha: ';
+  ERRO_AO_BUSCAR_PRODUTOS = 'Erro ao buscar produto(s). ';
   ERRO_AO_BUSCAR_DIRETORIO = 'Diretório não encontrado. Dir: ';
+  ERRO_CONECTAR_BASE_DADOS = 'Erro ao conectar na base de dados. ';
   ERRO_ESCREVER_ARQUIVO = 'Erro ao escrever arquivo: ';
   ERRO_LER_ARQUIVO = 'Erro ao ler arquivo: ';
   EXTENSAO_CSV = '.csv';
@@ -58,6 +60,10 @@ const
   INT_10000 = 10000;
   INT_20000 = 20000;
 
+  MENSAGEM_ENTRE_EM_CONTATO_SUPORTE = 'Favor entrar em contato com o suporte. ';
+
+  PRODUTOS_NAO_ENCONTADOS = 'Produto(s) não encontrado(s). ';
+
   /// <summary>
   /// Constante que armazena as siglas de todos os estados brasileiros e do Distrito Federal.
   /// </summary>
@@ -67,7 +73,7 @@ const
      'SP', 'SE', 'TO');
   SIGLA_IBPTAX = 'IBPTax';
   STRING_VAZIO = '';
-  STRING_DEBUG = 'Win32\Debug\';
+  STRING_DEBUG = '\Win32\Debug';
   PASTA_TEST = '\Test';
 
   ARQUIVO_PASTA_CONF_INI = 'Config\config.ini';

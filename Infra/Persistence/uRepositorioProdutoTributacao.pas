@@ -267,7 +267,7 @@ function TRepositorioProdutoTributacao.ObterProdutoTributacao
   (const pCodigoProduto: Integer; const pUf: string): TProdutoTributacao;
 const
   SQL_AND_UF = 'AND UF = :UF ';
-  SQL_ORDER_BY_VIGENCIA_FIM_DESC = 'ORDER BY VIGENCIAFIM DESC';
+  SQL_ORDER_BY_VIGENCIA_FIM_DESC = ' ORDER BY VIGENCIAFIM DESC';
 
 var
   FDQuery: TFDQuery;

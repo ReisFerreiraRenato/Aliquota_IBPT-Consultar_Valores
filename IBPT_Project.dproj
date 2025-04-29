@@ -145,6 +145,13 @@
         <DCCReference Include="Infra\Persistence\uRepositorioProdutoTributacao.pas"/>
         <DCCReference Include="Comum\uArquivoCSV.pas"/>
         <DCCReference Include="UseCase\uCalculoTributosProduto.pas"/>
+        <DCCReference Include="Interfaces\UI\fBuscarProduto.pas">
+            <Form>BuscarProduto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UseCase\uBuscarProduto.pas"/>
+        <DCCReference Include="UseCase\uBuscarTributacaoProduto.pas"/>
+        <DCCReference Include="UseCase\uBuscarcalculoTributosProduto.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

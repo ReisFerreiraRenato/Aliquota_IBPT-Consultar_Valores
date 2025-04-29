@@ -1,0 +1,6 @@
+29/04/2025 11:11:53 - Erro ao buscar produto(s). Object factory for class {3E9B315B-F456-4175-A864-B2573C4A2304} is missing. To register it, you can include unit [FireDAC.DApt] into your project
+29/04/2025 11:13:17 - Erro ao buscar produto(s). Object factory for class {3E9B315B-F456-4175-A864-B2573C4A2304} is missing. To register it, you can include unit [FireDAC.DApt] into your project
+29/04/2025 11:13:30 - Erro ao buscar produto(s). Object factory for class {3E9B315B-F456-4175-A864-B2573C4A2304} is missing. To register it, you can include unit [FireDAC.DApt] into your project
+29/04/2025 11:14:24 - Erro ao buscar produto(s). Object factory for class {3E9B315B-F456-4175-A864-B2573C4A2023} is missing. To register it, you can include unit [FireDAC.Stan.Async] into your project
+29/04/2025 14:11:53 - Erro ao calcular tributos: Access violation at address 01326FD6 in module 'IBPT_Project.exe'. Read of address 00000004
+29/04/2025 14:13:24 - Erro ao calcular tributos: Access violation at address 01326FD6 in module 'IBPT_Project.exe'. Read of address 00000004

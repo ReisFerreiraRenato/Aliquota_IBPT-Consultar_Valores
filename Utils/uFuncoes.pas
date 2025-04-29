@@ -10,7 +10,8 @@ uses
   System.SysUtils,
   uConstantesGerais,
   uConstantesBaseDados,
-  uLogErro;
+  uLogErro,
+  FireDAC.Stan.Error;
 
   // <summary>
   /// Funcao para adicionar % antes e depois da string
@@ -25,6 +26,12 @@ uses
   function IfThen(pCondicao: Boolean; pTrue: TEncoding; pFalse: TEncoding): TEncoding;
 
   /// <summary>
+  /// Funcao IntParaStr para converter com tratamento de erro
+  /// <param name="pValor">Integer</param>
+  /// <returns>string</returns>
+  function IntParaStr(pValor: Integer): string;
+
+  /// <summary>
   /// Funcao com tratamento de erro para converter um string em datetime
   /// result TDatetime
   /// </summary>
@@ -37,10 +44,29 @@ uses
   function StringParaCurrency(const pValor: string): Currency;
 
   /// <summary>
-  /// Funcao com tratamento de erro para converter um string em integer
-  /// result Integer
+  /// Funcao com tratamento de erro para converter um string em currency
+  /// result Currency
   /// </summary>
+  function StringParaCurrencyDef(const pValor: string): Currency;
+
+  /// <summary>
+  /// Funcao com tratamento de erro para converter um string em integer
+  /// </summary>
+  /// <param name="pValor">string</param>
+  /// <returns>Integer</returns>
   function StringParaInt(const pValor: string): Integer;
+
+  /// <summary>
+  /// Método para tratar erro genérico
+  /// </summary>
+  /// <param name="pE">Exception</param>
+  procedure TratarErro(const pE: Exception);
+
+  /// <summary>
+  /// Método para tratar erro genérico
+  /// </summary>
+  /// <param name="pE">EFDDBEngineException</param>
+  procedure TratarErroConexao(const pE: EFDDBEngineException);
 
   /// <summary>
   /// Método para tratar erro de parâmetro vazio na configuração da conexao
@@ -88,9 +114,37 @@ begin
   Result := '%' + pValor + '%';
 end;
 
+procedure TratarErro(const pE: Exception);
+begin
+  RegistrarErro(ERRO_AO_BUSCAR_PRODUTOS + pE.Message);
+end;
+
 procedure TratarErroConexaoParametro(const pParametroVazio: String);
 begin
   RegistrarErro(ERRO_PARAMETRO_VAZIO + pParametroVazio);
+end;
+
+procedure TratarErroConexao(const pE: EFDDBEngineException);
+begin
+  RegistrarErro(ERRO_CONECTAR_BASE_DADOS + pE.Message);
+end;
+
+function IntParaStr(pValor: Integer): string;
+begin
+  try
+    Result := IntToStr(pValor);
+  except
+    Result := STRING_VAZIO;
+  end;
+end;
+
+function StringParaCurrencyDef(const pValor: string): Currency;
+begin
+  try
+    Result := StringParaCurrency(pValor.Replace(',','').Replace('.',','));
+  except
+    Result := CURRENCY_ZERO;
+  end;
 end;
 
 end.
