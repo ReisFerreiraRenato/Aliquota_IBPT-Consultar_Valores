@@ -8,7 +8,7 @@ uses
   Vcl.Buttons, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Stan.Intf,
   FireDAC.Comp.UI, Data.DB, Datasnap.DBClient, Vcl.NumberBox, Vcl.StdCtrls,
   uProduto, Vcl.ExtCtrls, uFuncoes, uBuscarCalculoTributosProduto,
-  uArquivoCSVLinhaProduto, Vcl.Mask;
+  uArquivoCSVLinhaProduto, Vcl.Mask, uThreadImportarArquivos, uConstantesGerais;
 
 type
   TMenu = class(TForm)
@@ -78,6 +78,9 @@ type
     eValorTributacaoNacionalFederal: TEdit;
     OpenDialog1: TOpenDialog;
     bLimparTela: TBitBtn;
+    lbImportandoTabelas: TLabel;
+    Timer1: TTimer;
+    bSair: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure bTestarConexaoClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -90,11 +93,19 @@ type
     procedure bImportarTabelaClick(Sender: TObject);
     procedure bImportarTodasTabelasClick(Sender: TObject);
     procedure bLimparTelaClick(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure AtualizarVerlbImportandoTabelas(
+      const pVisible: Boolean; const pMensagem: string = IMPORTANDO_TABELAS);
+    procedure LigarDesligarTime(pValor: Boolean);
+    procedure bSairClick(Sender: TObject);
   private
     { Private declarations }
-    produtoSelecionado: Tproduto;
-    produtoCompleto: TArquivoCSVLinhaProduto;
+    FProdutoSelecionado: Tproduto;
+    FProdutoCompleto: TArquivoCSVLinhaProduto;
+    FThreadImportarArquivos: TThreadImportarArquivos;
+    FLimparLabel: Boolean;
     procedure LimparDados;
+    procedure ThreadImportarTabelas;
   public
     { Public declarations }
   end;
@@ -108,27 +119,42 @@ implementation
 
 uses
   System.IniFiles, uConfiguracao, uConexaoBanco, uVariaveisGlobais,
-  uConstantesGerais, uLogErro, uConstantesBaseDados, fBuscarProduto,
+  uLogErro, uConstantesBaseDados, fBuscarProduto,
   uImportadorTabelas;
 
 { TMenu }
 
 procedure TMenu.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  if FThreadImportarArquivos <> nil then
+  begin
+    if FThreadImportarArquivos.Finished then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage(IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO_FECHAMENTO);
+    end;
+  end;
   //destruir conexao
   gConexaoBanco.Destroy;
 end;
 
 procedure TMenu.FormCreate(Sender: TObject);
 begin
+  FThreadImportarArquivos := nil;
+  FLimparLabel := False;
   CarregarConfiguracao;
   CarregarItensCombobox;
 end;
 
+procedure TMenu.LigarDesligarTime(pValor: Boolean);
+begin
+  Timer1.Enabled := pValor;
+end;
+
 procedure TMenu.LimparDados;
 begin
-  produtoSelecionado := nil;
-  produtoCompleto := nil;
+  FProdutoSelecionado := nil;
+  FProdutoCompleto := nil;
   pnProdutoSelecionado.Visible := False;
   pnProdutoTributacao.Visible := False;
   eValor.ValueInt := 0;
@@ -136,9 +162,61 @@ begin
   bBuscarProduto.SetFocus;
 end;
 
+procedure TMenu.ThreadImportarTabelas;
+begin
+  try
+    if (FThreadImportarArquivos <> nil) and
+      (FThreadImportarArquivos.Finished) then
+    begin
+      ShowMessage(IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO);
+      Exit;
+    end;
+
+    FThreadImportarArquivos := TThreadImportarArquivos.Create(True);
+
+    FThreadImportarArquivos.Start;
+  except
+    on E: Exception do
+    begin
+      ShowMessage(ERRO_AO_IMPORTAR_TABELAS);
+    end;
+  end;
+end;
+
+procedure TMenu.Timer1Timer(Sender: TObject);
+begin
+  if (Cursor <> crDefault) then
+  begin
+    Cursor := crDefault;
+    Refresh;
+  end;
+
+  if (FThreadImportarArquivos <> nil) then
+  begin
+    if (not FThreadImportarArquivos.Finished) then
+    begin
+      AtualizarVerlbImportandoTabelas(True);
+      Exit;
+    end;
+
+    AtualizarVerlbImportandoTabelas(False);
+    LigarDesligarTime(False);
+    ShowMessage(TABELAS_IMPORTADA_COM_SUCESSO);
+    FThreadImportarArquivos := nil;
+  end;
+end;
+
 procedure TMenu.AparecerEsconderPainelProdutoSelecionado(pValor: Boolean);
 begin
   pnProdutoSelecionado.Visible := pValor;
+end;
+
+procedure TMenu.AtualizarVerlbImportandoTabelas(
+      const pVisible: Boolean; const pMensagem: string = IMPORTANDO_TABELAS);
+begin
+  lbImportandoTabelas.Caption := pMensagem;
+  lbImportandoTabelas.Visible := pVisible;
+  lbImportandoTabelas.Refresh;
 end;
 
 procedure TMenu.bBuscarProdutoClick(Sender: TObject);
@@ -147,7 +225,7 @@ var
   codigo: integer;
   descricao, ncm: string;
 begin
-  produtoSelecionado := nil;
+  FProdutoSelecionado := nil;
   AparecerEsconderPainelProdutoSelecionado(False);
   buscarProduto := TBuscarProduto.Create(Self);
   try
@@ -157,7 +235,7 @@ begin
       codigo := buscarProduto.codigoProdutoSelecionado;
       descricao := string(buscarProduto.descricaoProdutoSelecionado);
       ncm := string(buscarProduto.codigoNcmProdutoSelecionado);
-      produtoSelecionado := TProduto.Create(codigo, descricao, ncm);
+      FProdutoSelecionado := TProduto.Create(codigo, descricao, ncm);
     end;
   finally
     buscarProduto.Free;
@@ -183,14 +261,14 @@ begin
     Exit;
   end;
 
-  if (produtoSelecionado = nil) then
+  if (FProdutoSelecionado = nil) then
   begin
     ShowMessage(ERRO_SELECIONAR_PRODUTO);
     bBuscarProduto.SetFocus;
     Exit;
   end;
 
-  produtoCompleto := BuscarProdutoTributacao(produtoSelecionado.Codigo, cbUF.Text, eValor.ValueInt);
+  FProdutoCompleto := BuscarProdutoTributacao(FProdutoSelecionado.Codigo, cbUF.Text, eValor.ValueInt);
   CarregarProdutoCompleto;
 end;
 
@@ -215,23 +293,21 @@ begin
 end;
 
 procedure TMenu.bImportarTodasTabelasClick(Sender: TObject);
-var
-  importarTodasTabelas: TImportadorTabelas;
 begin
-  importarTodasTabelas := TImportadorTabelas.Create;
-  try
-    if importarTodasTabelas.ImportarTabelas then
-      ShowMessage(TABELAS_IMPORTADA_COM_SUCESSO)
-    else
-      ShowMessage(ERRO_AO_IMPORTAR_TABELAS);
-  finally
-    importarTodasTabelas.Free;
-  end;
+  LigarDesligarTime(True);
+  AtualizarVerlbImportandoTabelas(True, IMPORTANDO_TABELAS);
+
+  ThreadImportarTabelas;
 end;
 
 procedure TMenu.bLimparTelaClick(Sender: TObject);
 begin
   LimparDados;
+end;
+
+procedure TMenu.bSairClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TMenu.bTestarConexaoClick(Sender: TObject);
@@ -253,12 +329,12 @@ end;
 
 procedure TMenu.CarregarProduto;
 begin
-  if produtoSelecionado <> nil then
+  if FProdutoSelecionado <> nil then
   begin
     AparecerEsconderPainelProdutoSelecionado(True);
-    eDescricaoProdutoSelecionado.Text := produtoSelecionado.Descricao;
-    eCodigoProdutoSelecionado.ValueInt := produtoSelecionado.Codigo;
-    eNCMProdutoSelecionado.ValueInt := StringParaInt(produtoSelecionado.Ncm);
+    eDescricaoProdutoSelecionado.Text := FProdutoSelecionado.Descricao;
+    eCodigoProdutoSelecionado.ValueInt := FProdutoSelecionado.Codigo;
+    eNCMProdutoSelecionado.ValueInt := StringParaInt(FProdutoSelecionado.Ncm);
   end;
 end;
 
@@ -266,33 +342,33 @@ procedure TMenu.CarregarProdutoCompleto;
 const
   captionProduto = 'Produto: {0} - Valor R$ {1} - Impostos R$ {2} = Líquido R$ {3}';
 begin
-  if produtoCompleto <> nil then
+  if FProdutoCompleto <> nil then
   begin
     pnProdutoTributacao.Visible := True;
-    lbApresentacaoProduto.Caption := String.Format(captionProduto, [produtoCompleto.Descricao, eValor.Text,
-      produtoCompleto.SomaTributacaoValor.ToString, produtoCompleto.ValorLiquido.ToString]);
+    lbApresentacaoProduto.Caption := String.Format(captionProduto, [FProdutoCompleto.Descricao, eValor.Text,
+      FProdutoCompleto.SomaTributacaoValor.ToString, FProdutoCompleto.ValorLiquido.ToString]);
 
     eValorProduto.ValueCurrency := eValor.ValueCurrency;
-    eDescricao.Text := produtoCompleto.Descricao;
-    eCodigo.ValueInt := produtoCompleto.CodigoProduto;
-    eEx.ValueInt := produtoCompleto.Ex;
-    eSomaTributacao.Text := produtoCompleto.SomaTributacaoPorcentagem.ToString;
-    eSomaValoresTributacao.Text := produtoCompleto.SomaTributacaoValor.ToString;
-    eTribNacionalFederal.ValueCurrency := produtoCompleto.NacionalFederal;
-    eTribImportadosFederal.ValueCurrency := produtoCompleto.ImportadosFederal;
-    eTribEstadual.ValueCurrency := produtoCompleto.Estadual;
-    eTribMunicipal.ValueCurrency := produtoCompleto.Municipal;
-    eValorTributacaoNacionalFederal.Text := produtoCompleto.ValorTribNacionalFederal.ToString;
-    eValorTributacaoImportadosFederal.Text := produtoCompleto.ValorTribImportadosFederal.ToString;
-    eValorTributacaoEstadual.Text := produtoCompleto.ValorTribEstadual.ToString;
-    eValorTributacaoMunicipal.Text := produtoCompleto.ValorTribMunicipal.ToString;
-    eValorLiquido.ValueCurrency := produtoCompleto.ValorLiquido;
-    eNCM.ValueInt := produtoCompleto.CodigoNCM;
-    eFonte.Text := produtoCompleto.Fonte;
-    eVersao.Text := produtoCompleto.Versao;
-    eChave.Text := produtoCompleto.Chave;
-    eDataVigenciaInicio.Text := DateToStr(produtoCompleto.VigenciaInicio);
-    eDataVigenciaFim.Text := DateToStr(produtoCompleto.VigenciaFim);
+    eDescricao.Text := FProdutoCompleto.Descricao;
+    eCodigo.ValueInt := FProdutoCompleto.CodigoProduto;
+    eEx.ValueInt := FProdutoCompleto.Ex;
+    eSomaTributacao.Text := FProdutoCompleto.SomaTributacaoPorcentagem.ToString;
+    eSomaValoresTributacao.Text := FProdutoCompleto.SomaTributacaoValor.ToString;
+    eTribNacionalFederal.ValueCurrency := FProdutoCompleto.NacionalFederal;
+    eTribImportadosFederal.ValueCurrency := FProdutoCompleto.ImportadosFederal;
+    eTribEstadual.ValueCurrency := FProdutoCompleto.Estadual;
+    eTribMunicipal.ValueCurrency := FProdutoCompleto.Municipal;
+    eValorTributacaoNacionalFederal.Text := FProdutoCompleto.ValorTribNacionalFederal.ToString;
+    eValorTributacaoImportadosFederal.Text := FProdutoCompleto.ValorTribImportadosFederal.ToString;
+    eValorTributacaoEstadual.Text := FProdutoCompleto.ValorTribEstadual.ToString;
+    eValorTributacaoMunicipal.Text := FProdutoCompleto.ValorTribMunicipal.ToString;
+    eValorLiquido.ValueCurrency := FProdutoCompleto.ValorLiquido;
+    eNCM.ValueInt := FProdutoCompleto.CodigoNCM;
+    eFonte.Text := FProdutoCompleto.Fonte;
+    eVersao.Text := FProdutoCompleto.Versao;
+    eChave.Text := FProdutoCompleto.Chave;
+    eDataVigenciaInicio.Text := DateToStr(FProdutoCompleto.VigenciaInicio);
+    eDataVigenciaFim.Text := DateToStr(FProdutoCompleto.VigenciaFim);
   end;
 end;
 

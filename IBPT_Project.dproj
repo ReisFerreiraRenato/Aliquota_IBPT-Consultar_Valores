@@ -152,6 +152,7 @@
         <DCCReference Include="UseCase\uBuscarProduto.pas"/>
         <DCCReference Include="UseCase\uBuscarTributacaoProduto.pas"/>
         <DCCReference Include="UseCase\uBuscarcalculoTributosProduto.pas"/>
+        <DCCReference Include="UseCase\uThreadImportarArquivos.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

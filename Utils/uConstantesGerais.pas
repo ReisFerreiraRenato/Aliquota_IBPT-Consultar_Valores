@@ -87,6 +87,14 @@ const
 
   TABELAS_IMPORTADA_COM_SUCESSO = 'Tabela(s) importada(s) com sucesso. ';
 
+  IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO = 'Importação das tabelas em andamento. ';
+  IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO_FECHAMENTO =
+    IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO +
+    'O software só pode ser fechado após a conclusão. ';
+
+  IMPORTANDO_TABELAS = 'Importando tabelas. ';
+  IMPORTANDO_TABELAS_FIM = 'Tabelas importadas. ';
+
   ARQUIVO_PASTA_CONF_INI = 'Config\config.ini';
 
 implementation

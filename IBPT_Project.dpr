@@ -24,7 +24,8 @@ uses
   fBuscarProduto in 'Interfaces\UI\fBuscarProduto.pas' {BuscarProduto},
   uBuscarProduto in 'UseCase\uBuscarProduto.pas',
   uBuscarTributacaoProduto in 'UseCase\uBuscarTributacaoProduto.pas',
-  uBuscarcalculoTributosProduto in 'UseCase\uBuscarcalculoTributosProduto.pas';
+  uBuscarcalculoTributosProduto in 'UseCase\uBuscarcalculoTributosProduto.pas',
+  uThreadImportarArquivos in 'UseCase\uThreadImportarArquivos.pas';
 
 {$R *.res}
 

@@ -29,11 +29,26 @@ object Menu: TMenu
     Height = 15
     Caption = 'UF:'
   end
+  object lbImportandoTabelas: TLabel
+    Left = 579
+    Top = 0
+    Width = 166
+    Height = 25
+    Alignment = taRightJustify
+    Caption = 'Importando Tabelas'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clCrimson
+    Font.Height = -19
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    Visible = False
+  end
   object eValor: TNumberBox
     Left = 312
     Top = 32
     Width = 121
-    Height = 32
+    Height = 33
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -19
@@ -61,7 +76,7 @@ object Menu: TMenu
     Left = 8
     Top = 76
     Width = 513
-    Height = 135
+    Height = 136
     Enabled = False
     TabOrder = 4
     Visible = False
@@ -198,7 +213,7 @@ object Menu: TMenu
       Left = 1
       Top = 1
       Width = 735
-      Height = 40
+      Height = 28
       Align = alTop
       Alignment = taCenter
       Caption = 'lbApresentacaoProduto'
@@ -208,6 +223,7 @@ object Menu: TMenu
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+      ExplicitWidth = 208
     end
     object eCodigo: TNumberBox
       Left = 7
@@ -513,7 +529,7 @@ object Menu: TMenu
     Left = 545
     Top = 32
     Width = 200
-    Height = 30
+    Height = 25
     Hint = 'Consultar tributacao do produto'
     Caption = '&Consultar Tributa'#231#227'o do Produto'
     TabOrder = 3
@@ -521,9 +537,9 @@ object Menu: TMenu
   end
   object bTestarConexao: TBitBtn
     Left = 544
-    Top = 69
+    Top = 63
     Width = 200
-    Height = 30
+    Height = 25
     Hint = 'Testar a conex'#227'o com o banco de dados'
     Caption = 'Testar &Conex'#227'o'
     TabOrder = 6
@@ -531,9 +547,9 @@ object Menu: TMenu
   end
   object bImportarTabela: TBitBtn
     Left = 544
-    Top = 107
+    Top = 94
     Width = 200
-    Height = 30
+    Height = 25
     Hint = 'Selecionar arquivo para importar'
     Caption = '&Importar Tablela'
     TabOrder = 7
@@ -541,28 +557,44 @@ object Menu: TMenu
   end
   object bImportarTodasTabelas: TBitBtn
     Left = 544
-    Top = 144
+    Top = 125
     Width = 200
-    Height = 30
+    Height = 25
     Hint = 'Importar todas as tabelas'
     Caption = 'Importar &Todas As Tabelas'
     TabOrder = 8
     OnClick = bImportarTodasTabelasClick
   end
   object bLimparTela: TBitBtn
-    Left = 544
-    Top = 181
+    Left = 545
+    Top = 156
     Width = 200
-    Height = 30
+    Height = 25
     Hint = 'Limpar dados'
     Caption = '&Limpar Tela'
     TabOrder = 9
     OnClick = bLimparTelaClick
+  end
+  object bSair: TBitBtn
+    Left = 544
+    Top = 187
+    Width = 200
+    Height = 25
+    Hint = 'Limpar dados'
+    Caption = '&Sair'
+    TabOrder = 10
+    OnClick = bSairClick
   end
   object OpenDialog1: TOpenDialog
     Filter = 'Csv|*.csv|Excel |*.xlx|Excel 2007|*.xlsx'
     Title = 'Importar Planilhas'
     Left = 456
     Top = 88
+  end
+  object Timer1: TTimer
+    Enabled = False
+    OnTimer = Timer1Timer
+    Left = 512
+    Top = 152
   end
 end
