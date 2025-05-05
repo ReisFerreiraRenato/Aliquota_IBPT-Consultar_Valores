@@ -16,6 +16,7 @@ uses
   uFuncoes;
 
 type
+  /// <summary>Classe para calcular os tributos do produto</summary>
   TCalculoTributosProduto = class(TObject)
   private
     FRepositorioProduto: TRepositorioProduto;
@@ -23,23 +24,17 @@ type
     FConexaoBanco: TConexaoBanco;
 
   public
-    /// <summary>
-    /// Cria uma instância da classe TCalculoTributosProduto.
-    /// </summary>
-    ///  <param name="pConexaoBanco">Instância de TConexaoBanco para acessar o banco de dados.</param>
+    /// <summary>Cria uma instância da classe. </summary>
+    ///  <param name="pConexaoBanco" type="TConexaoBanco">Instância de TConexaoBanco para acessar o banco de dados.</param>
     constructor Create(pConexaoBanco: TConexaoBanco);
 
-    /// <summary>
-    /// Destrói a instância da classe TCalculoTributosProduto.
-    /// </summary>
+    /// <summary>Destrói a instância da classe. </summary>
     destructor Destroy; override;
 
-    /// <summary>
-    /// Calcula os valores dos tributos para um produto com base no código do produto, UF e valor.
-    /// </summary>
-    /// <param name="pCodigoProduto">Código do produto.</param>
-    /// <param name="pUF">UF para calcular os tributos.</param>
-    /// <param name="pValor">Valor do produto.</param>
+    /// <summary>Calcula os valores dos tributos para um produto com base no código do produto, UF e valor. </summary>
+    /// <param name="pCodigoProduto" type="Integer">Código do produto.</param>
+    /// <param name="pUF" type="string">UF para calcular os tributos.</param>
+    /// <param name="pValor" type="Currency">Valor do produto.</param>
     /// <returns>Um TArquivoCSVprodutoCompleto contendo as informações calculadas.</returns>
     function CalcularTributosProduto(pCodigoProduto: Integer; pUF: string; pValor: Currency): TArquivoCSVLinhaProduto;
   end;
@@ -96,6 +91,8 @@ begin
       produtoCompleto.Mensagem := 'Tributação não encontrada para o produto e UF informados';
       Exit;
     end;
+
+    produtoCompleto.TributacaoEncontrada := True;
 
     // Popula o TArquivoCSVprodutoCompleto com os dados
     produtoCompleto.CodigoProduto := Produto.Codigo;

@@ -262,6 +262,13 @@ end;
 
 procedure TMenu.bConsultarTributacaoProdutoClick(Sender: TObject);
 begin
+  if (FProdutoSelecionado = nil) then
+  begin
+    ShowMessage(ERRO_SELECIONAR_PRODUTO);
+    bBuscarProduto.SetFocus;
+    Exit;
+  end;
+
   if (eValor.ValueCurrency = 0) then
   begin
     ShowMessage(ERRO_ADICIONE_VALOR_CALCULADO);
@@ -273,13 +280,6 @@ begin
   begin
     ShowMessage(ERRO_VALOR_NEGATIVO);
     eValor.SetFocus;
-    Exit;
-  end;
-
-  if (FProdutoSelecionado = nil) then
-  begin
-    ShowMessage(ERRO_SELECIONAR_PRODUTO);
-    bBuscarProduto.SetFocus;
     Exit;
   end;
 
@@ -357,33 +357,39 @@ procedure TMenu.CarregarProdutoCompleto;
 const
   captionProduto = 'Produto: {0} - Valor R$ {1} - Impostos R$ {2} = Líquido R$ {3}';
 begin
-  if FProdutoCompleto <> nil then
+  if (FProdutoCompleto <> nil) then
   begin
-    pnProdutoTributacao.Visible := True;
-    lbApresentacaoProduto.Caption := String.Format(captionProduto, [FProdutoCompleto.Descricao, eValor.Text,
-      FProdutoCompleto.SomaTributacaoValor.ToString, FProdutoCompleto.ValorLiquido.ToString]);
+    if FProdutoCompleto.TributacaoEncontrada then
+    begin
+      pnProdutoTributacao.Visible := True;
+      lbApresentacaoProduto.Caption := String.Format(captionProduto, [FProdutoCompleto.Descricao, eValor.Text,
+        FProdutoCompleto.SomaTributacaoValor.ToString, FProdutoCompleto.ValorLiquido.ToString]);
 
-    eValorProduto.ValueCurrency := eValor.ValueCurrency;
-    eDescricao.Text := FProdutoCompleto.Descricao;
-    eCodigo.ValueInt := FProdutoCompleto.CodigoProduto;
-    eEx.ValueInt := FProdutoCompleto.Ex;
-    eSomaTributacao.Text := FProdutoCompleto.SomaTributacaoPorcentagem.ToString;
-    eSomaValoresTributacao.Text := FProdutoCompleto.SomaTributacaoValor.ToString;
-    eTribNacionalFederal.ValueCurrency := FProdutoCompleto.NacionalFederal;
-    eTribImportadosFederal.ValueCurrency := FProdutoCompleto.ImportadosFederal;
-    eTribEstadual.ValueCurrency := FProdutoCompleto.Estadual;
-    eTribMunicipal.ValueCurrency := FProdutoCompleto.Municipal;
-    eValorTributacaoNacionalFederal.Text := FProdutoCompleto.ValorTribNacionalFederal.ToString;
-    eValorTributacaoImportadosFederal.Text := FProdutoCompleto.ValorTribImportadosFederal.ToString;
-    eValorTributacaoEstadual.Text := FProdutoCompleto.ValorTribEstadual.ToString;
-    eValorTributacaoMunicipal.Text := FProdutoCompleto.ValorTribMunicipal.ToString;
-    eValorLiquido.ValueCurrency := FProdutoCompleto.ValorLiquido;
-    eNCM.ValueInt := FProdutoCompleto.CodigoNCM;
-    eFonte.Text := FProdutoCompleto.Fonte;
-    eVersao.Text := FProdutoCompleto.Versao;
-    eChave.Text := FProdutoCompleto.Chave;
-    eDataVigenciaInicio.Text := DateToStr(FProdutoCompleto.VigenciaInicio);
-    eDataVigenciaFim.Text := DateToStr(FProdutoCompleto.VigenciaFim);
+      eValorProduto.ValueCurrency := eValor.ValueCurrency;
+      eDescricao.Text := FProdutoCompleto.Descricao;
+      eCodigo.ValueInt := FProdutoCompleto.CodigoProduto;
+      eEx.ValueInt := FProdutoCompleto.Ex;
+      eSomaTributacao.Text := FProdutoCompleto.SomaTributacaoPorcentagem.ToString;
+      eSomaValoresTributacao.Text := FProdutoCompleto.SomaTributacaoValor.ToString;
+      eTribNacionalFederal.ValueCurrency := FProdutoCompleto.NacionalFederal;
+      eTribImportadosFederal.ValueCurrency := FProdutoCompleto.ImportadosFederal;
+      eTribEstadual.ValueCurrency := FProdutoCompleto.Estadual;
+      eTribMunicipal.ValueCurrency := FProdutoCompleto.Municipal;
+      eValorTributacaoNacionalFederal.Text := FProdutoCompleto.ValorTribNacionalFederal.ToString;
+      eValorTributacaoImportadosFederal.Text := FProdutoCompleto.ValorTribImportadosFederal.ToString;
+      eValorTributacaoEstadual.Text := FProdutoCompleto.ValorTribEstadual.ToString;
+      eValorTributacaoMunicipal.Text := FProdutoCompleto.ValorTribMunicipal.ToString;
+      eValorLiquido.ValueCurrency := FProdutoCompleto.ValorLiquido;
+      eNCM.ValueInt := FProdutoCompleto.CodigoNCM;
+      eFonte.Text := FProdutoCompleto.Fonte;
+      eVersao.Text := FProdutoCompleto.Versao;
+      eChave.Text := FProdutoCompleto.Chave;
+      eDataVigenciaInicio.Text := DateToStr(FProdutoCompleto.VigenciaInicio);
+      eDataVigenciaFim.Text := DateToStr(FProdutoCompleto.VigenciaFim);
+      Exit;
+    end;
+
+    ShowMessage(TRIBUTACAO_NAO_ENCONTRADA);
   end;
 end;
 

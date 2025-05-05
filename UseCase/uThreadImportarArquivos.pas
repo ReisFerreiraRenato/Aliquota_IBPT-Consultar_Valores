@@ -6,6 +6,7 @@ uses
   System.SysUtils, System.Classes, Vcl.Controls, Vcl.Forms, Vcl.StdCtrls;
 
 type
+  /// <summary>Classe para importar os arquivos com as tabelas</summary>
   TThreadImportarArquivos = class(TThread)
   private
     FMensagem: AnsiString;
@@ -13,16 +14,15 @@ type
   protected
     procedure Execute; override;
   public
+    /// <summary>Cria uma instância da classe. </summary>
+    /// <param name="pCriarSuspenso" type="Boolean">Para criar ou não a classe suspensa. </param>
+    /// <param name="pMensagem" type="string">Para adicionar ou não a mensagem. </param>
     constructor Create(pCriarSuspenso: Boolean; pMensagem: string = '');
 
-    /// <summary>
-    /// Obtém e define se houve erro.
-    /// </summary>
+    /// <summary>Obtém e define se houve erro. </summary>
     property Erro: Boolean read FErro write FErro;
 
-    /// <summary>
-    /// Obtém e define se houve erro.
-    /// </summary>
+    /// <summary>Obtém e define mensagem. </summary>
     property Mensagem: AnsiString read FMensagem write FMensagem;
   end;
 

@@ -27,69 +27,49 @@ type
   /// </summary>
   TRepositorioProdutoTributacao = class(TInterfacedObject, IRepositorioProdutoTributacao)
   private
-    FConexao: TFDConnection; // Removido TFDConnection
+    FConexao: TFDConnection;
 
   public
-    /// <summary>
-    /// Construtor da classe TRepositorioProdutoTributacao.
-    /// Recebe a conexão com o banco de dados por injeção de dependência.
-    /// </summary>
-    /// <param name="pConexao">A conexão com o banco de dados.</param>
-    constructor Create(pConexao: TFDConnection);  //Modificado para TFDConnection
-    /// <summary>
-    /// Destrutor da classe TRepositorioProdutoTributacao.
-    /// Libera os recursos utilizados.
-    /// </summary>
+    /// <summary> Construtor da classe. Recebe a conexão com o banco de dados por injeção de dependência. </summary>
+    /// <param name="pConexao" type="TFDConnection">A conexão com o banco de dados.</param>
+    constructor Create(pConexao: TFDConnection);
+
+    /// <summary>Destrutor da classe. Libera os recursos utilizados. </summary>
     destructor Destroy; override;
 
-    /// <summary>
-    /// Insere um novo registro de tributação de produto no banco de dados.
-    /// </summary>
-    /// <param name="pProdutoTributacao">Objeto contendo os dados da tributação do produto.</param>
+    /// <summary>Insere um novo registro de tributação de produto no banco de dados. </summary>
+    /// <param name="pProdutoTributacao" type="TProdutoTributacao">Objeto contendo os dados da tributação do produto.</param>
     procedure InserirProdutoTributacao(const pProdutoTributacao: TProdutoTributacao);
 
-    /// <summary>
-    /// Obtém um registro de tributação de produto pelo código do produto.
-    /// </summary>
-    /// <param name="pCodigoProduto">Código do produto para buscar a tributação.</param>
+    /// <summary>Obtém um registro de tributação de produto pelo código do produto. </summary>
+    /// <param name="pCodigoProduto" type="pCodigoProduto">Código do produto para buscar a tributação.</param>
     /// <returns>Objeto com os dados da tributação do produto, ou nil se não encontrado.</returns>
     function ObterProdutoTributacao
       (const pCodigoProduto: Integer): TProdutoTributacao; overload;
 
-    /// <summary>
-    /// Obtém o registro de tributação de produto mais recente por código do produto, NCM e UF.
-    /// A busca considera a data de validade (cVIGENCIAFIM) mais recente.
-    /// </summary>
-    /// <param name="pCodigoProduto">Código do produto.</param>
-    /// <param name="pNcm">NCM do produto.</param>
-    /// <param name="pUf">UF do produto.</param>
+    /// <summary>Obtém o registro de tributação de produto mais recente por código do produto, NCM e UF. A busca considera a data de validade (VigenciaFim) mais recente. </summary>
+    /// <param name="pCodigoProduto" type="Integer">Código do produto.</param>
+    /// <param name="pNcm" type="String">Codigo NCM do produto.</param>
+    /// <param name="pUf" type="string">UF do produto.</param>
     /// <returns>Objeto com os dados da tributação do produto mais recente, ou nil se não encontrado.</returns>
     function ObterProdutoTributacao
       (const pCodigoProduto: Integer; const pUf: string): TProdutoTributacao; overload;
 
-    /// <summary>
-    /// Atualiza um registro de tributação de produto no banco de dados.
-    /// </summary>
-    /// <param name="pProdutoTributacao">Objeto com os dados da tributação do produto a serem atualizados.</param>
+    /// <summary>Atualiza um registro de tributação de produto no banco de dados. </summary>
+    /// <param name="pProdutoTributacao" type="TProdutoTributacao">Objeto com os dados da tributação do produto a serem atualizados.</param>
     procedure AtualizarProdutoTributacao(const pProdutoTributacao: TProdutoTributacao);
 
-    /// <summary>
-    /// Exclui um registro de tributação de produto pelo código do produto.
-    /// </summary>
-    /// <param name="pCodigoProduto">Código do produto para excluir a tributação.</param>
+    /// <summary>Exclui um registro de tributação de produto pelo código do produto. </summary>
+    /// <param name="pCodigoProduto" type="Integer">Código do produto para excluir a tributação.</param>
     procedure ExcluirProdutoTributacao(const pCodigoProduto: Integer);
 
-    /// <summary>
-    /// Obtém todos os registros de tributação de produtos do banco de dados.
-    /// </summary>
+    /// <summary>Obtém todos os registros de tributação de produtos do banco de dados. </summary>
     /// <returns>Lista de objetos contendo os dados de tributação dos produtos.</returns>
     function ObterTodosProdutosTributacao: TList<TProdutoTributacao>;
 
   private
-    /// <summary>
-    /// Cria um objeto TProdutoTributacao a partir dos dados de um leitor (query).
-    /// </summary>
-    /// <param name="pFDQuery">Leitor (query) contendo os dados do produto tributação.</param>
+    /// <summary> Cria um objeto TProdutoTributacao a partir dos dados de um leitor (query). </summary>
+    /// <param name="pFDQuery" type="TFDQuery">Leitor (query) contendo os dados do produto tributação.</param>
     /// <returns>Objeto TProdutoTributacao preenchido com os dados do leitor.</returns>
     function ObterProdutoTributacaoDoLeitor(pFDQuery: TFDQuery): TProdutoTributacao;
   end;
@@ -295,18 +275,18 @@ function TRepositorioProdutoTributacao.ObterProdutoTributacaoDoLeitor(
 begin
   Result := TProdutoTributacao.Create;
   Result.UF := pFDQuery.FieldByName(cUF).AsString;
-  Result.CODIGOPRODUTO := pFDQuery.FieldByName(cCCODIGOPRODUTO).AsInteger;
-  Result.EX := pFDQuery.FieldByName(cEX).AsInteger;
-  Result.TIPO := pFDQuery.FieldByName(cTIPO).AsInteger;
-  Result.TRIBNACIONALFEDERAL := pFDQuery.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency;
-  Result.TRIBIMPORTADOSFEDERAL := pFDQuery.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency;
-  Result.TRIBESTADUAL := pFDQuery.FieldByName(cTRIBESTADUAL).AsCurrency;
-  Result.TRIBMUNICIPAL := pFDQuery.FieldByName(cTRIBMUNICIPAL).AsCurrency;
-  Result.VIGENCIAINICIO := pFDQuery.FieldByName(cVIGENCIAINICIO).AsDateTime;
-  Result.VIGENCIAFIM := pFDQuery.FieldByName(cVIGENCIAFIM).AsDateTime;
-  Result.CHAVE := pFDQuery.FieldByName(cCHAVE).AsString;
-  Result.VERSAO := pFDQuery.FieldByName(cVERSAO).AsString;
-  Result.FONTE := pFDQuery.FieldByName(cFONTE).AsString;
+  Result.CodigoProduto := pFDQuery.FieldByName(cCCODIGOPRODUTO).AsInteger;
+  Result.Ex := pFDQuery.FieldByName(cEX).AsInteger;
+  Result.Tipo := pFDQuery.FieldByName(cTIPO).AsInteger;
+  Result.TribNacionalFederal := pFDQuery.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency;
+  Result.TribImportadosFederal := pFDQuery.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency;
+  Result.TribEstadual := pFDQuery.FieldByName(cTRIBESTADUAL).AsCurrency;
+  Result.TribMunicipal := pFDQuery.FieldByName(cTRIBMUNICIPAL).AsCurrency;
+  Result.VigenciaInicio := pFDQuery.FieldByName(cVIGENCIAINICIO).AsDateTime;
+  Result.VigenciaFim := pFDQuery.FieldByName(cVIGENCIAFIM).AsDateTime;
+  Result.Chave := pFDQuery.FieldByName(cCHAVE).AsString;
+  Result.Versao := pFDQuery.FieldByName(cVERSAO).AsString;
+  Result.Fonte := pFDQuery.FieldByName(cFONTE).AsString;
 end;
 
 end.

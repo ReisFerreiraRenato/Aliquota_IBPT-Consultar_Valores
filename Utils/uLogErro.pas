@@ -2,7 +2,9 @@ unit uLogErro;
 
 interface
 
-procedure RegistrarErro(const Mensagem: string);
+/// <summary>Registra o erro no arquivo de log</summary>
+/// <param name="pMensagem" type="string">Mensagem a ser gravada no arquivo de log.</param>
+procedure RegistrarErro(const pMensagem: string);
 
 implementation
 
@@ -12,12 +14,12 @@ uses
 const
   NOME_ARQUIVO_LOG = 'conexao_banco_de_dados.log';
 
-procedure RegistrarErro(const Mensagem: string);
+procedure RegistrarErro(const pMensagem: string);
 begin
   try
-    TFile.AppendAllText(NOME_ARQUIVO_LOG, DateTimeToStr(Now) + ' - ' + Mensagem + sLineBreak);
+    TFile.AppendAllText(NOME_ARQUIVO_LOG, DateTimeToStr(Now) + ' - ' + pMensagem + sLineBreak);
   except
-    Writeln('Erro ao gravar no arquivo de log: ' + Mensagem);
+    Writeln('Erro ao gravar no arquivo de log: ' + pMensagem);
   end;
 end;
 

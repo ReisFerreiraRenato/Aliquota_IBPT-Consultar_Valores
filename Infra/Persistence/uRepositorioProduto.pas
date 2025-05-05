@@ -20,48 +20,49 @@ uses
   uConstantesBaseDados;
 
 type
-  /// <summary>
-  /// Implementação do repositório de produtos para o banco de dados Firebird.
-  /// </summary>
+  /// <summary>Implementação do repositório de produtos para o banco de dados. </summary>
   TRepositorioProduto = class(TInterfacedObject, IRepositorioProduto)
   private
     FConexaoBanco: TConexaoBanco;
 
-    /// <summary>
-    /// Obtém o produto do leitor de dados.
-    /// </summary>
+    /// <summary>Obtém o produto do leitor de dados. </summary>
     /// <param name="pFDQuery">Objeto TFDQuery com os dados do produto.</param>
     /// <returns>Retorna o produto.</returns>
     function ObterProdutoDoLeitor(pFDQuery: TFDQuery): TProduto;
 
   public
-    /// <summary>
-    /// Cria uma nova instância da classe TRepositorioProdutoFirebird.
-    /// </summary>
-    /// <param name="pConexaoBanco">A conexão com o banco de dados Firebird.</param>
+    /// <summary>Cria uma nova instância da classe TRepositorioProdutoFirebird. </summary>
+    /// <param name="pConexaoBanco" type="TConexaoBanco">A conexão com o banco de dados Firebird.</param>
     constructor Create(pConexaoBanco: TConexaoBanco);
 
-    /// <summary>
-    /// Destrói a instância da classe TRepositorioProdutoFirebird.
-    /// </summary>
+    /// <summary>Destrói a instância da classe TRepositorioProdutoFirebird. </summary>
     destructor Destroy; override;
 
-    /// <inheritdoc />
+    /// <summary>Busca um produto pelo código. </summary>
+    /// <param name="pCodigo" type="Integer">O código do produto.</param>
+    /// <returns>O produto encontrado ou nil se não encontrado.</returns>
     function BuscarPorCodigo(pCodigo: Integer): TProduto;
 
-    /// <inheritdoc />
+    /// <summary>Busca produtos pela descrição. </summary>
+    /// <param name="pDescricao" type="string">A descrição do produto.</param>
+    /// <returns>Uma lista de produtos que correspondem à descrição.</returns>
     function BuscarPorDescricao(pDescricao: string): TArray<TProduto>;
 
-    /// <inheritdoc />
+    /// <summary>Busca produtos pelo NCM. </summary>
+    /// <param name="pNcm" type="string">Codigo NCM do produto.</param>
+    /// <returns>Uma lista de produtos que correspondem ao NCM.</returns>
     function BuscarPorNcm(pNcm: string): TArray<TProduto>;
 
-    /// <inheritdoc />
+    /// <summary>Insere um novo produto no banco de dados. </summary>
+    /// <param name="pProduto" type="TProduto">Objeto TProduto a ser inserido.</param>
     procedure Inserir(const pProduto: TProduto);
 
-    /// <inheritdoc />
+    /// <summary>Exclui um produto do banco de dados pelo código. </summary>
+    /// <param name="pCodigo" type="Integer">Código do produto a ser excluído.</param>
     procedure Excluir(pCodigo: Integer);
 
-    /// <inheritdoc />
+    /// <summary>Atualiza os dados de um produto no banco de dados. </summary>
+    /// <param name="pProduto" type="TProduto">Objeto TProduto com os novos dados.</param>
     procedure Atualizar(const pProduto: TProduto);
   end;
 

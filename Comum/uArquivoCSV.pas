@@ -17,7 +17,7 @@ uses
 
 type
 
-  /// <summary>Classe para manipular arquivos CSV. </summary>
+  /// <summary>Classe para manipular arquivos com tabelas(.cvs .xlsx .xls). </summary>
   TArquivoCSV = class
   private
     FNomeArquivo: string;

@@ -13,6 +13,7 @@ uses
   ufuncoes,
   Vcl.Forms;
 
+/// <summary>Importa os dados de configuração do arquivo '.ini'.</summary>
 procedure CarregarConfiguracao;
 
 implementation

@@ -7,9 +7,7 @@ unit uConstantesGerais;
 interface
 
 type
-  /// <summary>
-  /// Define um tipo para um array de strings contendo as siglas dos estados brasileiros.
-  /// </summary>
+  /// <summary>Define um tipo para um array de strings contendo as siglas dos estados brasileiros. </summary>
   TTipoSiglasEstados = array[0..26] of string;
 
 const
@@ -86,6 +84,8 @@ const
   PASTA_TEST = '\Test';
 
   TABELAS_IMPORTADA_COM_SUCESSO = 'Tabela(s) importada(s) com sucesso. ';
+
+  TRIBUTACAO_NAO_ENCONTRADA = 'Tributação não encontrada. ';
 
   IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO = 'Importação das tabelas em andamento. ';
   IMPORTACAO_TABELAS_THREAD_EM_EXECUCAO_FECHAMENTO =

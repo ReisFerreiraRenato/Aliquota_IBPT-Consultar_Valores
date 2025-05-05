@@ -28,94 +28,63 @@ type
     FChave: string;
     FVersao: string;
     FFonte: string;
-    FCodigoNCM: integer;
+    FCodigoNCM: Integer;
 
   public
 
-    /// <summary>
-    /// Cria uma nova instância da classe TArquivoCSVLinha.
-    /// </summary>
+    /// <summary>Cria uma nova instância da classe TArquivoCSVLinha. </summary>
     constructor Create; virtual;
 
-    /// <summary>
-    /// Destrói a instância da classe TArquivoCSVLinha.
-    /// </summary>
+    /// <summary>Destrói a instância da classe TArquivoCSVLinha. </summary>
     destructor Destroy; override;
 
-    /// <summary>
-    /// Clona a classe passada por parâmetro
-    /// </summary>
+    /// <summary>Clona a classe passada por parâmetro </summary>
     /// <param name="pObjeto">TArquivoCSVLinha</param>
     procedure Clone(const pObjeto: TArquivoCSVLinha); overload;
 
-    /// <summary>
-    /// Obtém e define o código do produto.
-    /// </summary>
-    property CodigoNCM: integer read FCodigoNCM write FCodigoNCM;
+    /// <summary>Obtém e define o código do produto. </summary>
+    property CodigoNCM: Integer read FCodigoNCM write FCodigoNCM;
 
-    /// <summary>
-    /// Obtém e define o EX do produto.
-    /// </summary>
+    /// <summary>Obtém e define o EX do produto. </summary>
     property Ex: Integer read FEx write FEx;
 
-    /// <summary>
-    /// Obtém e define o tipo do produto.
-    /// </summary>
+    /// <summary>Obtém e define o tipo do produto. </summary>
     property Tipo: Integer read FTipo write FTipo;
 
-    /// <summary>
-    /// Obtém e define a descrição do produto.
-    /// </summary>
+    /// <summary>Obtém e define a descrição do produto. </summary>
     property Descricao: string read FDescricao write FDescricao;
 
-    /// <summary>
-    /// Obtém e define o valor nacional/federal do produto.
-    /// </summary>
-    property NacionalFederal: Currency read FNacionalFederal write FNacionalFederal;
+    /// <summary>Obtém e define o valor nacional/federal do produto. </summary>
+    property NacionalFederal: Currency read FNacionalFederal
+      write FNacionalFederal;
 
-    /// <summary>
-    /// Obtém e define o valor importados federal do produto.
-    /// </summary>
-    property ImportadosFederal: Currency read FImportadosFederal write FImportadosFederal;
+    /// <summary>Obtém e define o valor importados federal do produto. </summary>
+    property ImportadosFederal: Currency read FImportadosFederal
+      write FImportadosFederal;
 
-    /// <summary>
-    /// Obtém e define o valor estadual do produto.
-    /// </summary>
+    /// <summary>Obtém e define o valor estadual do produto. </summary>
     property Estadual: Currency read FEstadual write FEstadual;
 
-    /// <summary>
-    /// Obtém e define o valor municipal do produto.
-    /// </summary>
+    /// <summary>Obtém e define o valor municipal do produto. </summary>
     property Municipal: Currency read FMunicipal write FMunicipal;
 
-    /// <summary>
-    /// Obtém e define a data de início da vigência.
-    /// </summary>
-    property VigenciaInicio: TDateTime read FVigenciaInicio write FVigenciaInicio;
+    /// <summary> Obtém e define a data de início da vigência. </summary>
+    property VigenciaInicio: TDateTime read FVigenciaInicio
+      write FVigenciaInicio;
 
-    /// <summary>
-    /// Obtém e define a data de fim da vigência.
-    /// </summary>
+    /// <summary>Obtém e define a data de fim da vigência. </summary>
     property VigenciaFim: TDateTime read FVigenciaFim write FVigenciaFim;
 
-    /// <summary>
-    /// Obtém e define a chave do produto.
-    /// </summary>
+    /// <summary>Obtém e define a chave do produto. </summary>
     property Chave: string read FChave write FChave;
 
-    /// <summary>
-    /// Obtém e define a versão do produto.
-    /// </summary>
+    /// <summary>Obtém e define a versão do produto. </summary>
     property Versao: string read FVersao write FVersao;
 
-    /// <summary>
-    /// Obtém e define a fonte do produto.
-    /// </summary>
+    /// <summary>Obtém e define a fonte do produto. </summary>
     property Fonte: string read FFonte write FFonte;
 
-    /// <summary>
-    /// Atribui os valores das propriedades da linha a partir de um array de strings.
-    /// </summary>
+    /// <summary>Atribui os valores das propriedades da linha a partir de um array de strings. </summary>
     /// <param name="Valores">Array de strings contendo os valores da linha.</param>
     procedure AtribuirValores(const pValores: TArray<string>); virtual;
   end;
@@ -187,7 +156,7 @@ begin
   if Length(pValores) >= INT_8 then
     FMunicipal := StringParaCurrencyDef(pValores[INT_7]);
   if Length(pValores) >= INT_9 then
-    FVigenciaInicio :=  StrToDateDef(pValores[INT_8], DATETIME_VAZIO);
+    FVigenciaInicio := StrToDateDef(pValores[INT_8], DATETIME_VAZIO);
   if Length(pValores) >= INT_10 then
     FVigenciaFim := StrToDateDef(pValores[INT_9], DATETIME_VAZIO);
   if Length(pValores) >= INT_11 then

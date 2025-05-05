@@ -14,29 +14,29 @@ uses
   FireDAC.Stan.Error;
 
   /// <summary>Funcao para adicionar % antes e depois da string</summary>
-  /// <param name="pValor">String para ser concatendada com %</param>
+  /// <param name="pValor" type="string">String para ser concatendada com %</param>
   /// <Returns>Type="string" - string adicionada % antes e depois da mesma</returns>
   function ConcatenaBuscaLiteralString(pValor: string): string;
 
   /// <summary>Funcao IntParaStr para converter com tratamento de erro </summary>
-  /// <param name="pValor">Vetor TArray<string></param>
+  /// <param name="pValor" type="TArray<string>">Vetor TArray<string></param>
   /// <returns>Type="string" - Todas as strings passadas por parâmetro concatenadas</returns>
   function ConcatenaStrings(const pValores: TArray<string>): string;
 
   /// <summary>Funcao IfThen para testar condicao</summary>
-  /// <param name="pValor">TArray<string></param>
+  /// <param name="pCondicao" type="Boolean">Condição</param>
   /// <param name="pTrue" type="TEncoding">TEncoding em caso de True</param>
   /// <param name="pFalse" type="TEncoding">TEncoding em caso de False</param>
   /// <returns>Type="TEncoding" </returns>
   function IfThen(pCondicao: Boolean; pTrue: TEncoding; pFalse: TEncoding): TEncoding;
 
   /// <summary>Funcao IntParaStr para converter com tratamento de erro</summary>
-  /// <param name="pValor">String contendo um Inteiro para ser convertido</param>
+  /// <param name="pValor" type="Integer">String contendo um Inteiro para ser convertido</param>
   /// <returns>Type="string"</returns>
   function IntParaStr(pValor: Integer): string;
 
   /// <summary>Funcao com tratamento de erro para converter um string em datetime</summary>
-  /// <param name="pValor" type="TDateTime">String contendo um TDateTime para ser convertido</param>
+  /// <param name="pValor" type="string">String contendo um TDateTime para ser convertido</param>
   /// <returns>Type="TDatetime"</returns>
   function StringParaDataTime(const pValor: string): TDateTime;
 
@@ -51,7 +51,7 @@ uses
   function StringParaCurrencyDef(const pValor: string): Currency;
 
   /// <summary>Funcao com tratamento de erro para converter um string em integer</summary>
-  /// <param name="pValor">string contendo um inteiro</param>
+  /// <param name="pValor" type="string">String contendo um inteiro</param>
   /// <returns>Integer</returns>
   function StringParaInt(const pValor: string): Integer;
 

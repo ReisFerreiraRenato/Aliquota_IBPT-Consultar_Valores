@@ -21,15 +21,16 @@ uses
   uVariaveisGlobais;
 
 type
+  ///<summary>Classe para importar as tabelas para a base de dados. </summary>
   TImportadorTabelas = class(TObject)
   private
-    /// <summary>Repositório de produtos utilizados na importação dos arquivos./// </summary>
+    /// <summary>Repositório de produtos utilizados na importação dos arquivos. </summary>
     FRepositorioProduto: TRepositorioProduto;
-    /// <summary>Repositorio de tributacao utilizado na importação dos arquivos./// </summary>
+    /// <summary>Repositorio de tributacao utilizado na importação dos arquivos. </summary>
     FRepositorioProdutoTributacao: TRepositorioProdutoTributacao;
-    /// <summary>Conexão com o banco de dados utilizada./// </summary>
+    /// <summary>Conexão com o banco de dados utilizada. </summary>
     FConexaoBanco: TConexaoBanco;
-    /// <summary>Atributo com a lista de arquivos para serem importados./// </summary>
+    /// <summary>Atributo com a lista de arquivos para serem importados. </summary>
     FArquivosCSV: TList<TArquivoCSV>;
 
 
@@ -159,26 +160,26 @@ begin
             ProdutoTributacao := TProdutoTributacao.Create;
             ProdutoTributacao.CodigoProduto := CodigoProduto;
             ProdutoTributacao.UF := UF;
-            ProdutoTributacao.EX := ArquivoCSV.Dados.FieldByName(cEX).AsInteger;
-            ProdutoTributacao.TIPO := ArquivoCSV.Dados.FieldByName(cTIPO)
+            ProdutoTributacao.Ex := ArquivoCSV.Dados.FieldByName(cEX).AsInteger;
+            ProdutoTributacao.Tipo := ArquivoCSV.Dados.FieldByName(cTIPO)
               .AsInteger;
-            ProdutoTributacao.TRIBNACIONALFEDERAL :=
+            ProdutoTributacao.TribNacionalFederal :=
               ArquivoCSV.Dados.FieldByName(cTRIBNACIONALFEDERAL).AsCurrency;
-            ProdutoTributacao.TRIBIMPORTADOSFEDERAL :=
+            ProdutoTributacao.TribImportadosFederal :=
               ArquivoCSV.Dados.FieldByName(cTRIBIMPORTADOSFEDERAL).AsCurrency;
-            ProdutoTributacao.TRIBESTADUAL := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.TribEstadual := ArquivoCSV.Dados.FieldByName
               (cTRIBESTADUAL).AsCurrency;
-            ProdutoTributacao.TRIBMUNICIPAL := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.TribMunicipal := ArquivoCSV.Dados.FieldByName
               (cTRIBMUNICIPAL).AsCurrency;
-            ProdutoTributacao.VIGENCIAINICIO := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.VigenciaInicio := ArquivoCSV.Dados.FieldByName
               (cVIGENCIAINICIO).AsDateTime;
-            ProdutoTributacao.VIGENCIAFIM := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.VigenciaFim := ArquivoCSV.Dados.FieldByName
               (cVIGENCIAFIM).AsDateTime;
-            ProdutoTributacao.CHAVE := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.Chave := ArquivoCSV.Dados.FieldByName
               (cCHAVE).AsString;
-            ProdutoTributacao.VERSAO := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.Versao := ArquivoCSV.Dados.FieldByName
               (cVERSAO).AsString;
-            ProdutoTributacao.FONTE := ArquivoCSV.Dados.FieldByName
+            ProdutoTributacao.Fonte := ArquivoCSV.Dados.FieldByName
               (cFONTE).AsString;
             FRepositorioProdutoTributacao.InserirProdutoTributacao
               (ProdutoTributacao);

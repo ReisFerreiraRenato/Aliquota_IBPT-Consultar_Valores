@@ -13,88 +13,63 @@ type
   TArquivoCSVLinhaProduto = class(TArquivoCSVLinha)
   private
     FCodigoProduto: Integer;
-    FUF: string;
+    FMensagem: string;
     FSomaTributacaoValor: Currency;
     FSomaTributacaoPorcentagem: Currency;
+    FTributacaoEncontrada: Boolean;
+    FUF: string;
     FValorLiquido: Currency;
     FValorTribNacionalFederal: Currency;
     FValorTribImportadosFederal: Currency;
     FValorTribEstadual: Currency;
     FValorTribMunicipal: Currency;
-    FMensagem: string;
   public
-    /// <summary>
-    /// Cria uma nova instância da classe TArquivoCSVLinhaProduto.
-    /// </summary>
+    /// <summary>Cria uma nova instância da classe TArquivoCSVLinhaProduto. </summary>
     constructor Create; override;
 
-    /// <summary>
-    /// Destrói a instância da classe TArquivoCSVLinhaProduto.
-    /// </summary>
+    /// <summary>Destrói a instância da classe TArquivoCSVLinhaProduto. </summary>
     destructor Destroy; override;
 
-    /// <summary>
-    /// Atribui os valores das propriedades da linha a partir de um array de strings.
-    /// Sobrescreve o método da classe base para incluir as novas propriedades.
-    /// </summary>
+    /// <summary>Atribui os valores das propriedades da linha a partir de um array de strings. Sobrescreve o método da classe base para incluir as novas propriedades.</summary>
     /// <param name="pValores">Array de strings contendo os valores da linha.</param>
     procedure AtribuirValores(const pValores: TArray<string>); override;
 
-    /// <summary>
-    /// Clona a classe passada por parâmetro
-    /// </summary>
+    /// <summary>Clona a classe passada por parâmetro</summary>
     /// <param name="pObjeto">TArquivoCSVLinhaProduto</param>
     procedure Clone(const pObjeto: TArquivoCSVLinhaProduto); overload;
 
-    /// <summary>
-    /// Obtém e define o ID do produto.
-    /// </summary>
+    /// <summary>Obtém e define o ID do produto. </summary>
     property CodigoProduto: Integer read FCodigoProduto write FCodigoProduto;
 
-    /// <summary>
-    /// Obtém e define a UF.
-    /// </summary>
+    /// <summary>Obtém e define a UF. </summary>
     property UF: string read FUF write FUF;
 
-    /// <summary>
-    /// Obtém e define a soma da tributação em valor.
-    /// </summary>
+    /// <summary>Obtém e define a soma da tributação em valor. </summary>
     property SomaTributacaoValor: Currency read FSomaTributacaoValor write FSomaTributacaoValor;
 
-    /// <summary>
-    /// Obtém e define a soma da tributação em porcentagem.
-    /// </summary>
+    /// <summary>Obtém e define a soma da tributação em porcentagem. </summary>
     property SomaTributacaoPorcentagem: Currency read FSomaTributacaoPorcentagem write FSomaTributacaoPorcentagem;
 
-    /// <summary>
-    /// Obtém e define o valor tributário nacional federal.
-    /// </summary>
+    /// <summary>Obtém e define o valor tributário nacional federal. </summary>
     property ValorTribNacionalFederal: Currency read FValorTribNacionalFederal write FValorTribNacionalFederal;
 
-    /// <summary>
-    /// Obtém e define o valor tributário de importados federal.
-    /// </summary>
+    /// <summary>Obtém e define o valor tributário de importados federal. </summary>
     property ValorTribImportadosFederal: Currency read FValorTribImportadosFederal write FValorTribImportadosFederal;
 
-    /// <summary>
-    /// Obtém e define o valor tributário estadual.
-    /// </summary>
+    /// <summary>Obtém e define o valor tributário estadual. </summary>
     property ValorTribEstadual: Currency read FValorTribEstadual write FValorTribEstadual;
 
-    /// <summary>
-    /// Obtém e define o valor tributário municipal.
-    /// </summary>
+    /// <summary>Obtém e define o valor tributário municipal. </summary>
     property ValorTribMunicipal: Currency read FValorTribMunicipal write FValorTribMunicipal;
 
-    /// <summary>
-    /// Obtém e define o valor líquido do produto.
-    /// </summary>
+    /// <summary>Obtém e define o valor líquido do produto. </summary>
     property ValorLiquido: Currency read FValorLiquido write FValorLiquido;
 
-    /// <summary>
-    /// Obtém e define a mensagem.
-    /// </summary>
+    /// <summary>Obtém e define a mensagem. </summary>
     property Mensagem: string read FMensagem write FMensagem;
+
+    /// <summary>Obtém e define se a tributacao foi encontrada. </summary>
+    property TributacaoEncontrada: Boolean read FTributacaoEncontrada write FTributacaoEncontrada;
   end;
 
 implementation
@@ -129,6 +104,7 @@ begin
     Self.ValorTribEstadual := pObjeto.ValorTribEstadual;
     Self.ValorTribMunicipal := pObjeto.ValorTribMunicipal;
     Self.Mensagem := pObjeto.Mensagem;
+    Self.TributacaoEncontrada := pObjeto.TributacaoEncontrada;
   end;
 end;
 
@@ -145,6 +121,7 @@ begin
   FValorTribMunicipal := CURRENCY_ZERO;
   FValorLiquido := CURRENCY_ZERO;
   FMensagem := STRING_VAZIO;
+  FTributacaoEncontrada := False;
 end;
 
 destructor TArquivoCSVLinhaProduto.Destroy;
@@ -176,6 +153,8 @@ begin
     FValorLiquido := StrToCurrDef(pValores[21], CURRENCY_ZERO);
   if Length(pValores) >= 23 then
     FMensagem := pValores[22];
+  if Length(pValores) >= 24 then
+    FTributacaoEncontrada := StrToBool(pValores[23]);
 end;
 
 end.
