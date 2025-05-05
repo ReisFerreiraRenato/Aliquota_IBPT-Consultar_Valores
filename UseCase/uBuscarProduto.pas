@@ -5,24 +5,18 @@ interface
 uses System.SysUtils, uProduto, uRepositorioProduto, uVariaveisGlobais, uLogErro,
      uConstantesGerais, FireDAC.Stan.Error;
 
-/// <summary>
-/// Obtém o produto por descricao.
-/// </summary>
-/// <param name="pDescricao">string</param>
+/// <summary>Obtém o produto por descricao. </summary>
+/// <param name="pDescricao" type="String">Descrição para buscar o produto</param>
 /// <returns>Retorna os produtos(TArray<TProduto>).</returns>
 function BuscarProdutosPorDescricao(pDescricao: string): TArray<TProduto>;
 
-/// <summary>
-/// Obtém o produto por codigo.
-/// </summary>
-/// <param name="pDescricao">string</param>
+/// <summary>Obtém o produto por codigo. </summary>
+/// <param name="pCodigo" type="Integer">Código para buscar o produto</param>
 /// <returns>Retorna o produto(TProduto).</returns>
 function BuscarProdutoPorCodigo(pCodigo: integer): TProduto;
 
-/// <summary>
-/// Obtém o produto por descricao.
-/// </summary>
-/// <param name="pNCM">integer</param>
+/// <summary>Obtém o produto por descricao. </summary>
+/// <param name="pNCM" type="Integer">Código NCM para buscar o produto</param>
 /// <returns>Retorna os produtos (TArray<TProduto>).</returns>
 function BuscarProdutoPorNCM(pNCM: string): TArray<TProduto>;
 

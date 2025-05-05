@@ -17,9 +17,7 @@ uses
 
 type
 
-  /// <summary>
-  /// Classe para manipular arquivos CSV.
-  /// </summary>
+  /// <summary>Classe para manipular arquivos CSV. </summary>
   TArquivoCSV = class
   private
     FNomeArquivo: string;
@@ -27,64 +25,47 @@ type
     FEncoding: TEncoding;
     FDados: TFDMemTable;
 
-    /// <summary>
-    /// funcao que retorna os dados do arquivo
-    /// </summary>
-    /// <result:>TFDMemTable</result>
+    /// <summary>Funcao que retorna os dados do arquivo. </summary>
+    /// <returns>Type="TFDMemTable" - Retorna os dados do arquivo</returns>
     function GetDados(): TFDMemTable;
 
-    /// <summary>
-    /// Extrai a Sigla do nome do arquivo
-    /// </summary>
+    /// <summary>Extrai a Sigla do nome do arquivo </summary>
     /// <param name="pNomeArquivo">O nome do arquivo.</param>
+    /// <returns>Type="String" - Sigla do estado, vazio se não encontrar</returns>
     function ExtrairSiglaNomeArquivo(const pNomeArquivo: string): string;
 
   public
-    /// <summary>
-    /// Cria uma nova instância da classe TArquivoCSV.
-    /// </summary>
-    /// <param name="pDelimitador">O delimitador usado no arquivo CSV (padrão: ';').</param>
+    /// <summary>Cria uma nova instância da classe TArquivoCSV. </summary>
+    /// <param name="pDelimitador" type="Char">O delimitador usado no arquivo CSV (padrão: ';').</param>
+    /// <param name="pEncoding" type="TEncoding">TEncoding utilizado no arquivo (padrão: TEncoding.UTF8).</param>
     constructor Create(const pDelimitador: Char = ';'; pEncoding: TEncoding = nil); overload;
 
-    /// <summary>
-    /// Cria uma nova instância da classe TArquivoCSV.
-    /// </summary>
-    /// <param name="pUF">Sigla do estado</param>
-    /// <param name="pDelimitador">O delimitador usado no arquivo CSV (padrão: ';').</param>
+    /// <summary>Cria uma nova instância da classe TArquivoCSV. </summary>
+    /// <param name="pUF" type="String">Sigla do estado</param>
+    /// <param name="pDelimitador" type="Char">O delimitador usado no arquivo CSV (padrão: ';').</param>
+    /// <param name="pEncoding" type="TEncoding">TEncoding utilizado no arquivo (padrão: TEncoding.UTF8).</param>
     constructor Create(const pUF: string; const pDelimitador: Char = ';'; pEncoding: TEncoding = nil); overload;
 
-    /// <summary>
-    /// Destrói a instância da classe TArquivoCSV.
-    /// </summary>
+    /// <summary>Destrói a instância da classe TArquivoCSV. </summary>
     destructor Destroy; override;
 
-    /// <summary>
-    /// Busca automaticamente a planilha do estado
-    /// </summary>
-    /// <param name="pNomeArquivo">O nome do arquivo.</param>
-    /// <result>caminho + nome do arquivo</result>
+    /// <summary>Busca e carrega automaticamente a planilha do estado </summary>
+    /// <param name="pSiglaEstado" type="String">O sigla do estado a ser buscado.</param>
+    /// <returns>Type="Boolean" - True se bem sucedido, False se não</returns>
     function BuscarCarregarPlanilhaEstado(const pSiglaEstado: string): Boolean;
 
-    /// <summary>
-    /// Lê o arquivo CSV.
-    /// </summary>
+    /// <summary> Lê o arquivo e salva no atributo Dados</summary>
     procedure LerArquivo();
 
-    /// <summary>
-    /// Escreve os dados no arquivo CSV.
-    /// </summary>
-    ///  <param name="pNomeArquivo">O nome do arquivo CSV.</param>
-    /// <param name="pIncluirCabecalho">Indica se deve incluir o cabeçalho no arquivo (padrão: True).</param>
-    procedure EscreverArquivo(const pNomeArquivo: string; const pIncluirCabecalho: Boolean = True);
+    /// <summary>Escreve os dados no arquivo CSV. </summary>
+    /// <param name="pNomeCaminhoArquivo" type="String">O nome e o caminho do arquivo. </param>
+    /// <param name="pIncluirCabecalho" type="Boolean">Indica se deve incluir o cabeçalho no arquivo (padrão: True).</param>
+    procedure EscreverArquivo(const pNomeCaminhoArquivo: string; const pIncluirCabecalho: Boolean = True);
 
-    /// <summary>
-    /// Obtém os dados do arquivo CSV como um TFDMemTable.
-    /// </summary>
+    /// <summary>Obtém os dados do arquivo CSV como um TFDMemTable. </summary>
     property Dados: TFDMemTable read GetDados;
 
-    /// <summary>
-    /// Obtém o nome do arquivo CSV.
-    /// </summary>
+    /// <summary>Obtém e atribiu o nome e caminiho do arquivo. </summary>
     property NomeArquivo: string read FNomeArquivo write FNomeArquivo;
 
   end;
@@ -258,12 +239,12 @@ begin
   end;
 end;
 
-procedure TArquivoCSV.EscreverArquivo(const pNomeArquivo: string; const pIncluirCabecalho: Boolean);
+procedure TArquivoCSV.EscreverArquivo(const pNomeCaminhoArquivo: string; const pIncluirCabecalho: Boolean);
 var
   Escritor: TStreamWriter;
 begin
   try
-    Escritor := TStreamWriter.Create(pNomeArquivo, False, TEncoding.UTF8);
+    Escritor := TStreamWriter.Create(pNomeCaminhoArquivo, False, TEncoding.UTF8);
     try
       if pIncluirCabecalho then
       begin
@@ -307,7 +288,7 @@ begin
     end;
   except
     on E: Exception do
-      RegistrarErro(ERRO_ESCREVER_ARQUIVO + pNomeArquivo + #13#10 + E.Message);
+      RegistrarErro(ERRO_ESCREVER_ARQUIVO + pNomeCaminhoArquivo + #13#10 + E.Message);
   end;
 end;
 

@@ -94,18 +94,34 @@ type
     procedure bImportarTodasTabelasClick(Sender: TObject);
     procedure bLimparTelaClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure AtualizarVerlbImportandoTabelas(
-      const pVisible: Boolean; const pMensagem: string = IMPORTANDO_TABELAS);
-    procedure LigarDesligarTime(pValor: Boolean);
     procedure bSairClick(Sender: TObject);
   private
     { Private declarations }
+
+    /// <summary>Campo para armazenar o produto selecionado na tela BuscarProduto</summary>
     FProdutoSelecionado: Tproduto;
+
+    /// <summary>Campo para armazenar o produto completo após a consulta e cálculos.</summary>
     FProdutoCompleto: TArquivoCSVLinhaProduto;
+
+    /// <summary>Campo Thread utilizada para importar as planilhas para a base de dados.</summary>
     FThreadImportarArquivos: TThreadImportarArquivos;
-    FLimparLabel: Boolean;
+
+    /// <summary>Limpa os dados e as telas.</summary>
     procedure LimparDados;
+
+    /// <summary>Importa as tabelas em um caminho configurado internamente no software.</summary>
     procedure ThreadImportarTabelas;
+
+    /// <summary>Atualiza e mostra a mensegem de improtar tabelas</summary>
+    /// <param name="pVisible" type="Boolean">'True' mostrar, 'False' não mostrar.</param>
+    /// <param name="pMensagem" type="string">Mensagem a ser mostrada na importação, não obrigatório, tem uma padrão configurada.</param>
+    procedure AtualizarVerlbImportandoTabelas(
+      const pVisible: Boolean; const pMensagem: string = IMPORTANDO_TABELAS);
+
+    /// <summary>Liga ou desliga o time que verifica a trhead que importa as tabelas.</summary>
+    /// <param name="pValor" type="Boolean">'True' liga, 'False' desliga.</param>
+    procedure LigarDesligarTime(pValor: Boolean);
   public
     { Public declarations }
   end;
@@ -141,7 +157,6 @@ end;
 procedure TMenu.FormCreate(Sender: TObject);
 begin
   FThreadImportarArquivos := nil;
-  FLimparLabel := False;
   CarregarConfiguracao;
   CarregarItensCombobox;
 end;

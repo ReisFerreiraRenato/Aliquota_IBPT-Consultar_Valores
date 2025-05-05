@@ -36,24 +36,57 @@ type
     procedure eNCMExit(Sender: TObject);
   private
     { Private declarations }
-    arrayProdutos: TArray<TProduto>;
-    produto: TProduto;
+    /// <summary>Campo para armazenar o array de produtos da consulta de produtos feita</summary>
+    FArrayProdutos: TArray<TProduto>;
+    /// <summary>Campo para armazenar o produto selecionado na tela</summary>
+    FProduto: TProduto;
+
+    /// <summary>Buscar produto pela descrição. </summary>
+    /// <param name="pDescricao" type="String">String contendo a descrição do produto.</param>
     procedure BuscarProdutoDescricao(pDescricao: String);
+
+    /// <summary>Buscar produto pelo código. </summary>
+    /// <param name="pCodigo" type="Integer">Código do produto.</param>
     procedure BuscarProdutoCodigo(pCodigo: Integer);
+
+    /// <summary>Buscar produtos pelo código NCM. </summary>
+    /// <param name="pNCM" type="String">Código NCM do produto.</param>
     procedure BuscarProdutoNCM(pNCM: String);
+
+    /// <summary>Carrega os produtos da consulta na tabela de memória. </summary>
     procedure CarregarTabelaMemoria;
-    procedure LimparTabelaMemoria;
+
+    /// <summary>Limpar/Criar a tabela de produtos da memória. </summary>
+    procedure LimparCriarTabelaMemoria;
+
+    /// <summary>Limpa os campos da tela e seta o foco no código. </summary>
     procedure LimparEdits;
-    procedure LimparEsconderGrid;
+
+    /// <summary>Esconder a grid. </summary>
+    procedure EsconderGrid;
+
+    /// <summary>Limpa a tabela e a grid de produtos. </summary>
     procedure LimparGridTabela;
+
+    /// <summary>Limpa a tela e todos os seus campos e atributos. </summary>
     procedure LimparTela;
+
+    /// <summary>Monta a grid com os produtos buscados. </summary>
     procedure MontarGrid;
   public
     { Public declarations }
-    produtoSelecionado: TProduto;
-    descricaoProdutoSelecionado: AnsiString;
-    codigoProdutoSelecionado: Integer;
-    codigoNcmProdutoSelecionado: AnsiString;
+
+    /// <summary>Obtém e define o produto selecionado</summary>
+    ProdutoSelecionado: TProduto;
+
+    /// <summary>Obtém e define a descricao do produto selecionado</summary>
+    DescricaoProdutoSelecionado: AnsiString;
+
+    /// <summary>Obtém e define o código do produto selecionado</summary>
+    CodigoProdutoSelecionado: Integer;
+
+    /// <summary>Obtém e define o código NCM do produto selecionado</summary>
+    CodigoNcmProdutoSelecionado: AnsiString;
   end;
 
 var
@@ -106,21 +139,21 @@ end;
 
 procedure TBuscarProduto.BuscarProdutoCodigo(pCodigo: Integer);
 begin
-  produto := BuscarProdutoPorCodigo(pCodigo);
-  if produto = nil then
+  FProduto := BuscarProdutoPorCodigo(pCodigo);
+  if FProduto = nil then
   begin
     ShowMessage(PRODUTOS_NAO_ENCONTADOS);
     Exit;
   end;
 
-  produtoSelecionado := produto;
+  produtoSelecionado := FProduto;
   MontarGrid;
 end;
 
 procedure TBuscarProduto.BuscarProdutoDescricao(pDescricao: String);
 begin
-  arrayProdutos := BuscarProdutosPorDescricao(pDescricao);
-  if arrayProdutos = nil then
+  FArrayProdutos := BuscarProdutosPorDescricao(pDescricao);
+  if FArrayProdutos = nil then
   begin
     ShowMessage(PRODUTOS_NAO_ENCONTADOS);
     Exit;
@@ -131,9 +164,9 @@ end;
 
 procedure TBuscarProduto.BuscarProdutoNCM(pNCM: String);
 begin
-  arrayProdutos := BuscarProdutoPorNCM(pNCM);
+  FArrayProdutos := BuscarProdutoPorNCM(pNCM);
 
-  if arrayProdutos = nil then
+  if FArrayProdutos = nil then
   begin
     ShowMessage(PRODUTOS_NAO_ENCONTADOS);
     Exit;
@@ -160,26 +193,27 @@ begin
   if not tabelaMemoria.IsEmpty then
     tabelaMemoria.EmptyDataSet;
 
-  if produto <> nil then
+  if FProduto <> nil then
   begin
     tabelaMemoria.Append;
-    tabelaMemoria.FieldByName(cCODIGO).AsInteger := produto.Codigo;
-    tabelaMemoria.FieldByName(cDESCRICAO).AsString := produto.Descricao;
-    tabelaMemoria.FieldByName(cNCM).AsString := produto.Ncm;
+    tabelaMemoria.FieldByName(cCODIGO).AsInteger := FProduto.Codigo;
+    tabelaMemoria.FieldByName(cDESCRICAO).AsString := FProduto.Descricao;
+    tabelaMemoria.FieldByName(cNCM).AsString := FProduto.Ncm;
     tabelaMemoria.Post;
   end;
 
-  if arrayProdutos <> nil then
+  if FArrayProdutos <> nil then
   begin
-    for contador := Low(arrayProdutos) to High(arrayProdutos) do
+    for contador := Low(FArrayProdutos) to High(FArrayProdutos) do
     begin
       tabelaMemoria.Append;
-      tabelaMemoria.FieldByName(cCODIGO).AsInteger := arrayProdutos[contador].Codigo;
-      tabelaMemoria.FieldByName(cDESCRICAO).AsString := arrayProdutos[contador].Descricao;
-      tabelaMemoria.FieldByName(cNCM).AsString := arrayProdutos[contador].Ncm;
+      tabelaMemoria.FieldByName(cCODIGO).AsInteger := FArrayProdutos[contador].Codigo;
+      tabelaMemoria.FieldByName(cDESCRICAO).AsString := FArrayProdutos[contador].Descricao;
+      tabelaMemoria.FieldByName(cNCM).AsString := FArrayProdutos[contador].Ncm;
       tabelaMemoria.Post;
     end;
   end;
+
   tabelaMemoria.First;
 end;
 
@@ -216,17 +250,17 @@ end;
 
 procedure TBuscarProduto.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if Assigned(produto) then
-    produto.Free;
+  if Assigned(FProduto) then
+    FProduto.Free;
 
-  if Assigned(arrayProdutos) and (Length(arrayProdutos) > 0) then
-    SetLength(arrayProdutos, 0);
+  if Assigned(FArrayProdutos) and (Length(FArrayProdutos) > 0) then
+    SetLength(FArrayProdutos, 0);
 end;
 
 procedure TBuscarProduto.FormCreate(Sender: TObject);
 begin
-  produto := nil;
-  arrayProdutos := nil;
+  FProduto := nil;
+  FArrayProdutos := nil;
 end;
 
 procedure TBuscarProduto.LimparEdits;
@@ -237,18 +271,19 @@ begin
   eCodigo.SetFocus;
 end;
 
-procedure TBuscarProduto.LimparEsconderGrid;
+procedure TBuscarProduto.EsconderGrid;
 begin
   gdDados.Visible := False;
+  gdDados.Refresh;
 end;
 
 procedure TBuscarProduto.LimparGridTabela;
 begin
-  LimparTabelaMemoria;
-  LimparEsconderGrid;
+  LimparCriarTabelaMemoria;
+  EsconderGrid;
 end;
 
-procedure TBuscarProduto.LimparTabelaMemoria;
+procedure TBuscarProduto.LimparCriarTabelaMemoria;
 begin
   if not Assigned(tabelaMemoria) then
     tabelaMemoria := tabelaMemoria.Create(Self);
@@ -257,9 +292,9 @@ end;
 
 procedure TBuscarProduto.LimparTela;
 begin
-  LimparTabelaMemoria;
+  LimparCriarTabelaMemoria;
   LimparGridTabela;
-  LimparEsconderGrid;
+  EsconderGrid;
   LimparEdits;
 end;
 

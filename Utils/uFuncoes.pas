@@ -13,70 +13,58 @@ uses
   uLogErro,
   FireDAC.Stan.Error;
 
-  // <summary>
-  /// Funcao para adicionar % antes e depois da string
-  /// result string
-  /// </summary>
+  /// <summary>Funcao para adicionar % antes e depois da string</summary>
+  /// <param name="pValor">String para ser concatendada com %</param>
+  /// <Returns>Type="string" - string adicionada % antes e depois da mesma</returns>
   function ConcatenaBuscaLiteralString(pValor: string): string;
 
-  /// <summary>
-  /// Funcao IntParaStr para converter com tratamento de erro
-  /// <param name="pValor">TArray<string></param>
-  /// <returns>string</returns>
+  /// <summary>Funcao IntParaStr para converter com tratamento de erro </summary>
+  /// <param name="pValor">Vetor TArray<string></param>
+  /// <returns>Type="string" - Todas as strings passadas por parâmetro concatenadas</returns>
   function ConcatenaStrings(const pValores: TArray<string>): string;
 
-  /// <summary>
-  /// Funcao IfThen para testar condicao
-  /// result TEncoding
-  /// </summary>
+  /// <summary>Funcao IfThen para testar condicao</summary>
+  /// <param name="pValor">TArray<string></param>
+  /// <param name="pTrue" type="TEncoding">TEncoding em caso de True</param>
+  /// <param name="pFalse" type="TEncoding">TEncoding em caso de False</param>
+  /// <returns>Type="TEncoding" </returns>
   function IfThen(pCondicao: Boolean; pTrue: TEncoding; pFalse: TEncoding): TEncoding;
 
-  /// <summary>
-  /// Funcao IntParaStr para converter com tratamento de erro
-  /// <param name="pValor">Integer</param>
-  /// <returns>string</returns>
+  /// <summary>Funcao IntParaStr para converter com tratamento de erro</summary>
+  /// <param name="pValor">String contendo um Inteiro para ser convertido</param>
+  /// <returns>Type="string"</returns>
   function IntParaStr(pValor: Integer): string;
 
-  /// <summary>
-  /// Funcao com tratamento de erro para converter um string em datetime
-  /// result TDatetime
-  /// </summary>
+  /// <summary>Funcao com tratamento de erro para converter um string em datetime</summary>
+  /// <param name="pValor" type="TDateTime">String contendo um TDateTime para ser convertido</param>
+  /// <returns>Type="TDatetime"</returns>
   function StringParaDataTime(const pValor: string): TDateTime;
 
-  /// <summary>
-  /// Funcao com tratamento de erro para converter um string em currency
-  /// result Currency
-  /// </summary>
+  /// <summary>Funcao com tratamento de erro para converter um string em currency</summary>
+  /// <param name="pValor" type="string">String contendo um Currency para ser convertido</param>
+  /// <returns>Type="TDatetime"</returns>
   function StringParaCurrency(const pValor: string): Currency;
 
-  /// <summary>
-  /// Funcao com tratamento de erro para converter um string em currency
-  /// result Currency
-  /// </summary>
+  /// <summary>Funcao com tratamento de erro para converter um string contendo um Currency(padrão americano) em currency</summary>
+  /// <param name="pValor" type="string">String contendo um Currency(padrão americano) para ser convertido</param>
+  /// <returns>Type="Currency"</returns>
   function StringParaCurrencyDef(const pValor: string): Currency;
 
-  /// <summary>
-  /// Funcao com tratamento de erro para converter um string em integer
-  /// </summary>
-  /// <param name="pValor">string</param>
+  /// <summary>Funcao com tratamento de erro para converter um string em integer</summary>
+  /// <param name="pValor">string contendo um inteiro</param>
   /// <returns>Integer</returns>
   function StringParaInt(const pValor: string): Integer;
 
-  /// <summary>
-  /// Método para tratar erro genérico
-  /// </summary>
-  /// <param name="pE">Exception</param>
+  /// <summary>Método para tratar erro genérico</summary>
+  /// <param name="pE" Type="Exception">Exceção para tratamento</param>
   procedure TratarErro(const pE: Exception);
 
-  /// <summary>
-  /// Método para tratar erro genérico
-  /// </summary>
-  /// <param name="pE">EFDDBEngineException</param>
+  /// <summary>Método para tratar erro genérico da clonexão</summary>
+  /// <param name="pE" type="EFDDBEngineException">Execeção para tratamento do erro</param>
   procedure TratarErroConexao(const pE: EFDDBEngineException);
 
-  /// <summary>
-  /// Método para tratar erro de parâmetro vazio na configuração da conexao
-  /// </summary>
+  /// <summary>Método para tratar erro de parâmetro vazio na configuração</summary>
+  /// <param name="pParametroVazio" type="string">nome do paâmetro que está vazio</param>
   procedure TratarErroConexaoParametro(const pParametroVazio: String);
 
 implementation
